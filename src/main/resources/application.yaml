@@ -30,6 +30,8 @@ spring:
     multipart:
       max-file-size: 200MB   # 限制一次上传的单个文件的总大小 ，单位可以是KB和MB
       max-request-size: 500MB   # 限制一次上传的所有文件的总大小
+  jmx: 
+    default-domain: demo     # 要想发布到tomcat中，每个项目的这个配置一定要不同，和项目名称相同即可
       
       
       

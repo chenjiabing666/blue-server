@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<swagger-version>2.7.0</swagger-version>
 	</properties>
 
 	<dependencies>
@@ -95,11 +96,24 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- 编码jar -->
+		<!-- 编码（md5，base） -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.10</version>
+		</dependency>
+
+		<!-- swagger自动生成文档依赖 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger-version}</version>
 		</dependency>
 
 		<!-- 添加POI的依赖,生成Excel -->
@@ -145,6 +159,7 @@
 			<version>2.6.2</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.qiniu</groupId>
 			<artifactId>happy-dns-java</artifactId>
