@@ -6,6 +6,8 @@ import net.bytebuddy.agent.builder.AgentBuilder.RedefinitionStrategy.Resubmissio
 
 import org.springframework.stereotype.Service;
 
+import com.techwells.demo.annotation.CapabilityMonitor;
+import com.techwells.demo.annotation.InsertLog;
 import com.techwells.demo.dao.UserMapper;
 import com.techwells.demo.domain.User;
 import com.techwells.demo.service.UserService;
@@ -57,18 +59,22 @@ public class UserServiceImpl implements UserService{
 		return resultInfo;
 	}
 
+	@InsertLog(name="陈加兵",operation="删除用户")  //使用日志注解，在程序执行成功之后记录日志
+	@CapabilityMonitor
 	@Override
 	public Object deleteUserById(Integer userId) {
-		ResultInfo resultInfo=new ResultInfo();
-		int count=userMapper.deleteByPrimaryKey(userId);
-		if (count==0) {
-			resultInfo.setCode("-1");
-			resultInfo.setMessage("删除失败");
-			return resultInfo;
+		System.out.println("删除成功");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		resultInfo.setMessage("删除成功");
-		return resultInfo;
+		return null;
 	}
+	
+	
+
 	
 		
 }
