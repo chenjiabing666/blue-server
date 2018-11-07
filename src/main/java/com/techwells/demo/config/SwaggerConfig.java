@@ -24,7 +24,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket createRestUserApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.groupName("user")  
+//				.groupName("user")  
 				.apiInfo(apiInfo())   //api的信息
 				.select()
 				.apis(RequestHandlerSelectors
