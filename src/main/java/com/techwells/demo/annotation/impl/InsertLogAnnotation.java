@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.techwells.demo.annotation.InsertLog;
 import com.techwells.demo.domain.Log;
 import com.techwells.demo.service.LogService;
-import com.techwells.demo.service.UserService;
 
 @Component   //注入
 @Aspect   //切面

@@ -2,7 +2,8 @@
 
 <configuration debug="false">
     <!--定义日志文件的存储地址 一般存储在服务器的文件夹中-->
-    <property name="LOG_HOME" value="/tmp/logs" />
+    <property name="LOG_HOME" value="/usr/local/weblogs" />
+    <!-- <property name="LOG_HOME" value="C:\\images\\logs" /> -->
 
     <!-- 控制台输出 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

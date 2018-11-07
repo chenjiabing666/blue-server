@@ -31,7 +31,7 @@ public class CapabilityMonitorAnnotationImpl {
 	/**
 	 * 环绕通知，在方法执行之前和之后都执行
 	 * capabilityMonitor(capabilityMonitor)：这里的参数一定要和切入点（`@Pointcut("@annotation(capabilityMonitor)")`）的参数相同
-	 * @param point
+	 * @param point  ProceedingJoinPoint对象，可以执行指定的方法，只能作用于环绕通知
 	 * @param capabilityMonitor  注解的对象
 	 * @throws Throwable 
 	 */
