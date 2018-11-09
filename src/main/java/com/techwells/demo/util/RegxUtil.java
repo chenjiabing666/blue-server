@@ -8,7 +8,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringUtil {
+/**
+ * 常用的正则表达式
+ * 有些经过测试是正确的，有些没有测试
+ * @author 陈加兵 	
+ * @since 2018年11月9日 上午11:51:50
+ */
+public class RegxUtil {
 	
 	/**
      * 正则表达式：验证用户名
@@ -72,13 +78,12 @@ public class StringUtil {
  
     /**
      * 校验手机号
-     * 
      * @param mobile
      * @return 校验通过返回true，否则返回false
      */
-    public static boolean isMobile(String mobile) {
-        return Pattern.matches(REGEX_MOBILE, mobile);
-    }
+//    public static boolean isMobile(String mobile) {
+//        return Pattern.matches(REGEX_MOBILE, mobile);
+//    }
  
     /**
      * 校验邮箱
@@ -143,7 +148,7 @@ public class StringUtil {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(StringUtil.isEmail("1879632@163"));
+		System.out.println(RegxUtil.isEmail("1879632@163"));
 	}
 	
 	
