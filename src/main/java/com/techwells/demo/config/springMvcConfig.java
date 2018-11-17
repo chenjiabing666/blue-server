@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat;
  * springmvc的配置类
  */
 @Configuration
-public class springMvcConfig {
+public class springMvcConfig implements WebMvcConfigurer {
 
     //注入返回Json格式的日期格式
     @Bean
@@ -42,32 +43,25 @@ public class springMvcConfig {
         };
     }
     
-    
-    
-//    @Bean
-//    public ServletRegistrationBean dispatcherRegistration(DispatcherServlet dispatcherServlet) {
-//        ServletRegistrationBean registration = new ServletRegistrationBean(
-//                dispatcherServlet);
-//        registration.addUrlMappings("*.do");
-//        return registration;
+	/**
+	 * 配置开启路径后缀匹配规则（但是配置好之后swagger的文档不能访问）
+	 */
+//	@Override
+//    public void configurePathMatch(PathMatchConfigurer configurer) {
+//        //开启路径后缀匹配
+//        configurer.setUseRegisteredSuffixPatternMatch(true);
 //    }
-//    
-    
+//	
+//	  /**
+//     * 设置匹配*.do后缀请求
+//     * @param dispatcherServlet
+//     * @return
+//     */
 //    @Bean
-//    public PathMatchConfigurer configurePathMatch() {
-//    	PathMatchConfigurer configurer=new PathMatchConfigurer();
-//        configurer.setUseSuffixPatternMatch(true)
-//              .setUseTrailingSlashMatch(true);
-//        return configurer;
-//      }
+//    public ServletRegistrationBean servletRegistrationBean(DispatcherServlet dispatcherServlet) {
+//        ServletRegistrationBean<DispatcherServlet> servletServletRegistrationBean = new ServletRegistrationBean<>(dispatcherServlet);
+//        servletServletRegistrationBean.addUrlMappings("*.do");
+//        return servletServletRegistrationBean;
+//    }
     
-    
-   
-
-    
-
-
-
-
-
 }

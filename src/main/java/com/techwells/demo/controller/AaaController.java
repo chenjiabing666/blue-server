@@ -27,6 +27,7 @@ import com.techwells.demo.util.ResultInfo;
  */
 @Api(description="模板的api接口")   //标注说明改接口的作用
 @RestController
+@RequestMapping("*.do")    //配置访问的后缀，只有后缀为.do的url才能访问到接口
 public class AaaController {
 	
 	@Resource
