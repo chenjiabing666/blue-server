@@ -35,7 +35,6 @@ public class AaaController {
 	
 	private Logger logger=LoggerFactory.getLogger(AaaController.class); //日志
 	
-	
 	/**
 	 * 添加模板
 	 * @param request
