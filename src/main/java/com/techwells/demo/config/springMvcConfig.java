@@ -35,9 +35,10 @@ public class springMvcConfig implements WebMvcConfigurer {
         return new WebMvcConfigurer() {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-//                        .allowedOrigins("http://192.168.1.97")
-//                        .allowedMethods("GET", "POST")
-//                        .allowCredentials(false).maxAge(3600);
+                        .allowedOrigins("http://192.168.1.97")
+                        .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE",
+								"OPTIONS")
+                        .allowCredentials(false).maxAge(3600);
                 ;   //对所有的路径都支持跨域的访问
             }
         };
