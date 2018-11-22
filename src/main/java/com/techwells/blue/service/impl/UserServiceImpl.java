@@ -3,6 +3,7 @@ package com.techwells.blue.service.impl;
 import java.security.interfaces.RSAKey;
 
 import javax.annotation.Resource;
+import javax.naming.spi.DirStateFactory.Result;
 
 import org.springframework.stereotype.Service;
 
@@ -107,6 +108,44 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int modifyUserReturnCount(User user) throws Exception {
 		return userMapper.updateByPrimaryKeySelective(user);
+	}
+
+	@PrintLog  //输出异常信息到日志文件中
+	@Override
+	public User getUserByEmail(String email) throws Exception {
+		return null;
+	}
+
+	@PrintLog  //输出异常信息到日志文件中
+	@Override
+	public Object cancelBindAccount(Integer userId, Integer type)
+			throws Exception {
+		ResultInfo resultInfo=new ResultInfo();
+		
+		User user=userMapper.selectByPrimaryKey(userId);
+		
+		if (user==null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户不存在");
+			return resultInfo;
+		}
+		
+		if (type==1) { //手机
+			user.setMobile(null);
+		}else if (type==2) {
+			user.setEmail(null);
+		}
+		
+		
+		int count=userMapper.updateByPrimaryKey(user);
+		
+		if (count==0) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("解绑失败");
+			return resultInfo;
+		}
+		resultInfo.setMessage("解绑成功");
+		return resultInfo;
 	}
 	
 }

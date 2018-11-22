@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.techwells.blue.util.DemoConstants;
+import com.techwells.blue.util.BlueConstants;
 import com.techwells.blue.util.UploadImageUtil;
 import com.techwells.blue.util.VideoUtil;
 

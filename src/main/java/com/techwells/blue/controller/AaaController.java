@@ -27,7 +27,7 @@ import com.techwells.blue.util.ResultInfo;
  * 模板的controller
  * @author 陈加兵
  */
-@Api(description="模板的api接口")   //标注说明改接口的作用
+@Api(description="模板的api")   //标注说明改接口的作用
 @RestController
 @RequestMapping("*.do")    //配置访问的后缀，只有后缀为.do的url才能访问到接口
 public class AaaController {
@@ -83,7 +83,7 @@ public class AaaController {
 	@PostMapping("/aaa/getAaaById")
 	@ApiOperation(value="获取模板详情",response=Aaa.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="Interger", required = true, value = "模板的aaaId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="int", required = true, value = "模板的aaaId", defaultValue = "1"),
 	})
 	public Object getAaaById(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
@@ -116,7 +116,7 @@ public class AaaController {
 	@PostMapping("/aaa/modifyAaa")
 	@ApiOperation(value="修改模板",response=Aaa.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="Interger", required = true, value = "模板的aaaId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="int", required = true, value = "模板的aaaId", defaultValue = "1"),
 	})
 	public Object modifyAaa(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
@@ -154,7 +154,7 @@ public class AaaController {
 	@PostMapping("/aaa/deleteAaaById")
 	@ApiOperation(value="根据Id删除模板",response=Aaa.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="Interger", required = true, value = "模板的aaaId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="int", required = true, value = "模板的aaaId", defaultValue = "1"),
 	})
 	public Object deleteAaa(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
@@ -187,8 +187,8 @@ public class AaaController {
 	@PostMapping("/aaa/getAaaList")
 	@ApiOperation(value="分页获取模板列表",response=Aaa.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="Interger", required = true, value = "当前的页数", defaultValue = "1"),
-		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="Interger", required = true, value = "每页显示的数量", defaultValue = "10"),
+		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="int", required = true, value = "每页显示的数量", defaultValue = "10"),
 	})
 	public Object getAaaList(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();

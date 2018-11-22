@@ -73,6 +73,23 @@ public interface UserService {
 	 */
 	User getUserByInvitedCode(String invitedCode)throws Exception;
 	
+	/**
+	 * 根据邮箱查询用户信息
+	 * @param email  邮箱
+	 * @return
+	 * @throws Exception
+	 */
+	User getUserByEmail(String email)throws Exception;
+
+	/**
+	 * 解绑手机号码或者邮箱
+	 * @param userId  用户Id
+	 * @param type  类型 
+	 * @return
+	 * @throws Exception
+	 */
+	Object cancelBindAccount(Integer userId,Integer type)throws Exception;
+	
 	
 	
 	

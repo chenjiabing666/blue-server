@@ -267,7 +267,7 @@
 FROM
 	t_user
 WHERE
-	mobile =#{mobile}
+	mobile =#{mobile} and deleted=0
 </select>
 
 <!-- 
@@ -279,9 +279,21 @@ WHERE
 FROM
 	t_user
 WHERE
-	invited_code =#{invitedCode}
+	invited_code =#{invitedCode} and deleted=0
 </select>
-  
+
+
+<!-- 
+	 User selectUserByEmail(String email);
+ -->
+<select id="selectUserByEmail" resultMap="BaseResultMap">
+	SELECT
+	*
+FROM
+	t_user
+WHERE
+	email =#{email} and deleted=0
+</select>
   
   
   

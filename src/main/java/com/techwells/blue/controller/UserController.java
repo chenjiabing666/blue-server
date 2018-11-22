@@ -4,24 +4,32 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.Session;
+import javax.naming.spi.DirStateFactory.Result;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
+import com.techwells.blue.util.BlueConstants;
 import com.techwells.blue.util.CRCode;
+import com.techwells.blue.util.SendMailUtils;
 import com.techwells.blue.util.SendSmsUtil;
+import com.techwells.blue.util.UploadFileUtils;
 import com.techwells.blue.domain.User;
 import com.techwells.blue.domain.User;
 import com.techwells.blue.service.UserService;
@@ -32,13 +40,17 @@ import com.techwells.blue.util.ResultInfo;
  * 用户的controller
  * @author 陈加兵
  */
-@Api(description="用户的api接口")   //标注说明改接口的作用
+@Api(description="用户的api")   //标注说明改接口的作用
 @RestController
 @RequestMapping("*.do")    //配置访问的后缀，只有后缀为.do的url才能访问到接口
 public class UserController {
 	
 	@Resource
 	private UserService userService;
+
+	@Value("${bindEmailUrl}")
+	private String bindEmailUrl;
+	
 	
 	private Logger logger=LoggerFactory.getLogger(UserController.class); //日志
 	
@@ -78,17 +90,15 @@ public class UserController {
 		}
 	}
 	
-	
-	
 	/**
 	 * 获取用户详情
 	 * @param request
 	 * @return
 	 */
 	@PostMapping("/user/getUserById")
-	@ApiOperation(value="获取用户详情",response=User.class,hidden=true)
+	@ApiOperation(value="获取用户详情",response=User.class,hidden=false)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "userId", dataType="Interger", required = true, value = "用户的userId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
 	})
 	public Object getUserById(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
@@ -119,13 +129,16 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/user/modifyUser")
-	@ApiOperation(value="修改用户",response=User.class,hidden=true)
+	@ApiOperation(value="修改用户信息",response=User.class,hidden=false)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "userId", dataType="Interger", required = true, value = "用户的userId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id 必填", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "nickName", dataType="String", required = false, value = "用户名 选填", defaultValue = "爱撒谎的男孩"),
+//		@ApiImplicitParam(paramType = "formData", name = "userIcon", dataType="file", required =false, value = "用户头像 选填"),
 	})
-	public Object modifyUser(HttpServletRequest request){
+	public Object modifyUser(HttpServletRequest request,@RequestParam(value="userIcon",required=false)MultipartFile userIcon){
 		ResultInfo resultInfo=new ResultInfo();
-		String userId=request.getParameter("userId");
+		String userId=request.getParameter("userId");  //用户Id
+		String nickName=request.getParameter("nickName");  //昵称
 		
 		if (StringUtils.isEmpty(userId)) {
 			resultInfo.setCode("-1");
@@ -136,6 +149,41 @@ public class UserController {
 		//封装数据
 		User user=new User();
 		user.setUserId(Integer.parseInt(userId));
+		
+		//如果昵称不为空，那么需要修改
+		if (!StringUtils.isEmpty(nickName)) {
+			user.setNickName(nickName);
+		}
+		
+		
+		//如果头像不为空，那么需要修改头像
+		if (userIcon!=null) {
+			String iconName=System.currentTimeMillis()+userIcon.getOriginalFilename();
+			String url=BlueConstants.UPLOAD_URL+"user-image/"+iconName;
+			String path=BlueConstants.UPLOAD_PATH+"user-image/";
+			File targetFile=new File(path,iconName);
+			
+			try {
+				UploadFileUtils.createChildFolder(targetFile);
+			} catch (Exception e) {
+				logger.error("创建子文件夹异常",e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("异常");
+				return resultInfo;
+			}
+			
+			try {
+				userIcon.transferTo(targetFile);
+			} catch (Exception e) {
+				logger.error("上传文件异常",e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("异常");
+				return resultInfo;
+			}
+			
+			user.setUserIcon(url);  //保存链接
+		}
+		
 		
 		//调用service层的方法
 		try {
@@ -232,7 +280,6 @@ public class UserController {
 			return resultInfo;
 		}
 	}
-	
 	
 	/**
 	 * 用户注册
@@ -600,6 +647,323 @@ public class UserController {
 		return resultInfo;
 	}
 	
+	
+	/**
+	 * 绑定手机号码
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/bindMobile")
+	@ApiOperation(value="绑定手机号码",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = true, value = "手机号码", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "code", dataType="String", required = true, value = "验证码", defaultValue = ""),
+	})
+	public Object bindAccount(HttpServletRequest request){
+		ResultInfo result=new ResultInfo();
+		String userId=request.getParameter("userId"); //用户Id
+		
+		String mobile=request.getParameter("mobile");  //手机号码
+		String code=request.getParameter("code");  //验证码 
+		
+		if (StringUtils.isEmpty(userId)) {
+			result.setCode("-1");
+			result.setMessage("用户Id不能为空");
+			return result;
+		}
+		
+		if (StringUtils.isEmpty(mobile)) {
+			result.setCode("-1");
+			result.setMessage("手机号码不能为空");
+			return result;
+		}
+		
+		if (StringUtils.isEmpty(code)) {
+			result.setCode("-1");
+			result.setMessage("验证码不能为空");
+			return result;
+		}
+		
+		
+		User user=null;
+		// 绑定手机号码
+		try {
+			user = userService.getUserByMobile(mobile);
+		} catch (Exception e) {
+			logger.error("获取用户信息异常", e);
+			result.setCode("-1");
+			result.setMessage("异常");
+			return result;
+		}
+
+		// 绑定手机号码肯定是没有手机号码，所以不用判断是否是同一个人
+		if (user != null) {
+			result.setCode("-1");
+			result.setMessage("该手机号已经被绑定");
+			return result;
+		}
+
+		// 判断验证码是否正确
+		CRCode crCode = (CRCode) request.getSession().getAttribute("code"); // 获取验证码
+
+		if (crCode == null) {
+			result.setCode("-1");
+			result.setMessage("请先发送验证码");
+			return result;
+		}
+
+		if (!mobile.equals(crCode.getCrCode())) {
+			result.setCode("-1");
+			result.setMessage("请先发送验证码");
+			return result;
+		}
+
+		if (!crCode.getCrCode().equals(code)) {
+			result.setCode("-1");
+			result.setMessage("验证码不正确");
+			return result;
+		}
+
+		// user=null
+		user = new User(); // 新建
+		user.setMobile(mobile);// 绑定
+		user.setUserId(Integer.parseInt(userId));
+		
+		
+		//修改
+		
+		int count=0;
+		try {
+			count=userService.modifyUserReturnCount(user);
+		} catch (Exception e) {
+			logger.error("修改用户信息异常", e);
+			result.setCode("-1");
+			result.setMessage("异常");
+			return result;
+		}
+		
+		
+		if (count==0) {
+			result.setCode("-1");
+			result.setMessage("绑定失败");
+			return result;
+		}
+		
+		result.setMessage("绑定成功");
+		return result;
+	}
+	
+	
+	/**
+	 * 绑定邮箱
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/bindEmail")
+	@ApiOperation(value="绑定邮箱",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = true, value = "手机号码", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "code", dataType="String", required = true, value = "验证码", defaultValue = ""),
+	})
+	public Object bindEmail(HttpServletRequest request){
+		ResultInfo result=new ResultInfo();
+		String userId=request.getParameter("userId"); //用户Id
+		
+		String mobile=request.getParameter("mobile");  //手机号码
+		String code=request.getParameter("code");  //验证码 
+		
+		if (StringUtils.isEmpty(userId)) {
+			result.setCode("-1");
+			result.setMessage("用户Id不能为空");
+			return result;
+		}
+		
+		if (StringUtils.isEmpty(mobile)) {
+			result.setCode("-1");
+			result.setMessage("手机号码不能为空");
+			return result;
+		}
+		
+		if (StringUtils.isEmpty(code)) {
+			result.setCode("-1");
+			result.setMessage("验证码不能为空");
+			return result;
+		}
+		
+		
+		User user=null;
+		// 绑定手机号码
+		try {
+			user = userService.getUserByMobile(mobile);
+		} catch (Exception e) {
+			logger.error("获取用户信息异常", e);
+			result.setCode("-1");
+			result.setMessage("异常");
+			return result;
+		}
+
+		// 绑定手机号码肯定是没有手机号码，所以不用判断是否是同一个人
+		if (user != null) {
+			result.setCode("-1");
+			result.setMessage("该手机号已经被绑定");
+			return result;
+		}
+
+		// 判断验证码是否正确
+		CRCode crCode = (CRCode) request.getSession().getAttribute("code"); // 获取验证码
+
+		if (crCode == null) {
+			result.setCode("-1");
+			result.setMessage("请先发送验证码");
+			return result;
+		}
+
+		if (!mobile.equals(crCode.getCrCode())) {
+			result.setCode("-1");
+			result.setMessage("请先发送验证码");
+			return result;
+		}
+
+		if (!crCode.getCrCode().equals(code)) {
+			result.setCode("-1");
+			result.setMessage("验证码不正确");
+			return result;
+		}
+
+		// user=null
+		user = new User(); // 新建
+		user.setMobile(mobile);// 绑定
+		user.setUserId(Integer.parseInt(userId));
+		
+		
+		//修改
+		
+		int count=0;
+		try {
+			count=userService.modifyUserReturnCount(user);
+		} catch (Exception e) {
+			logger.error("修改用户信息异常", e);
+			result.setCode("-1");
+			result.setMessage("异常");
+			return result;
+		}
+		
+		
+		if (count==0) {
+			result.setCode("-1");
+			result.setMessage("绑定失败");
+			return result;
+		}
+		
+		result.setMessage("绑定成功");
+		return result;
+	}
+	
+	
+	
+	
+	/**
+	 * 发送链接到指定的邮箱
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/sendEmailUrl")
+	@ApiOperation(value="发送链接到指定的邮箱",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "email", dataType="String", required = true, value = "邮箱地址", defaultValue = "123456@163.com"),
+	})
+	public Object sendEmailUrl(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String email=request.getParameter("email"); //邮箱账号
+		
+		if (StringUtils.isEmpty(email)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("邮箱地址不能为空");
+			return resultInfo;
+		}
+		
+		User user=null;
+		try {
+			user = userService.getUserByEmail(email);
+		} catch (Exception e) {
+			logger.error("获取用户信息异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+		
+		if (user!=null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("该邮箱已经被绑定了");
+			return resultInfo;
+		}
+		
+		
+		//没有被绑定，那么需要发送验证链接
+		
+		try {
+			SendMailUtils.sendTextEmail("蓝色按钮", "点击链接绑定邮箱："+bindEmailUrl, email);
+		} catch (Exception e) {
+			logger.error("发送邮件异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+		resultInfo.setMessage("发送成功");
+		return resultInfo;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 取消绑定邮箱或者手机号码
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/cancelBindAccount")
+	@ApiOperation(value="取消绑定邮箱或者手机号码",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "type", dataType="int", required = true, value = "解绑类型  1 手机号码 2 邮箱", defaultValue = "1"),
+	})
+	public Object cancelBindAccount(HttpServletRequest request){
+		ResultInfo result=new ResultInfo();
+		String userId=request.getParameter("userId"); //用户Id
+		String type=request.getParameter("type"); //解绑类型  1 手机号码 2 邮箱
+		
+		if (StringUtils.isEmpty(userId)) {
+			result.setCode("-1");
+			result.setMessage("用户Id不能为空");
+			return result;
+		}
+		
+		if (StringUtils.isEmpty(type)) {
+			result.setCode("-1");
+			result.setMessage("解绑类型不能为为空");
+			return result;
+		}
+		
+		try {
+			Object object=userService.cancelBindAccount(Integer.parseInt(userId),Integer.parseInt(type));
+			return object;
+		} catch (Exception e) {
+			logger.error("取消绑定异常",e);
+			result.setCode("-1");
+			result.setMessage("异常");
+			return result;
+		}
+	}
 	
 	
 	

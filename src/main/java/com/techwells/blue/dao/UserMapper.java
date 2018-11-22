@@ -29,5 +29,12 @@ public interface UserMapper {
      */
     User selectUserByInvitedCode(String invitedCode);
     
+    /**
+     * 根据邮箱查找用户信息
+     * @param email  邮箱
+     * @return
+     */
+    User selectUserByEmail(String email);
+    
     
 }

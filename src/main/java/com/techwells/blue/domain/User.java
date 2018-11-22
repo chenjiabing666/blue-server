@@ -1,18 +1,24 @@
 package com.techwells.blue.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel(value="user实体类")
 public class User {
+	
     private Integer userId;
 
     private String userIcon;
 
     private String userName;
-
+    
     private String nickName;
 
     private String password;
-
+    
+    @ApiModelProperty(value="用户类型：1、普通用户，2、认证企业，3、vip企业")
     private Integer userType;
 
     private String email;
@@ -20,19 +26,22 @@ public class User {
     private String mobile;
 
     private String address;
-
+    
+    @ApiModelProperty(value="性别 1 男 2 女")
     private Integer gender;
 
     private String description;
-
+    
+    @ApiModelProperty(value="积分")
     private Integer point;
-
+    
+    @ApiModelProperty(value="邀请码")
     private String invitedCode;
-
+    @ApiModelProperty(value="推荐人Id")
     private Integer recommendId;
-
+    @ApiModelProperty(value="最后登录的时间")
     private Date lastLoginDate;
-
+    
     private Integer activated;
 
     private Integer deleted;
