@@ -2,7 +2,7 @@
 spring:
   datasource:                ## 配置数据源
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://www.emoonbow.com:3306/applicationMarket?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://www.emoonbow.com:3306/blue_button?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: Taiwen2017
@@ -31,7 +31,7 @@ spring:
       max-file-size: 200MB   # 限制一次上传的单个文件的总大小 ，单位可以是KB和MB
       max-request-size: 500MB   # 限制一次上传的所有文件的总大小
   jmx: 
-    default-domain: demo     # 要想发布到tomcat中，每个项目的这个配置一定要不同，和项目名称相同即可
+    default-domain: blue-server     # 要想发布到tomcat中，每个项目的这个配置一定要不同，和项目名称相同即可
       
       
       
@@ -39,7 +39,7 @@ spring:
 server:
   port: 8080                    # 配置访问的端口号
   servlet:
-    context-path: /demo   # 配置发布的项目名称
+    context-path: /blue-server   # 配置发布的项目名称
   tomcat:
     uri-encoding: UTF-8         #配置tomcat的编码格式，用于处理get请求的乱码问题
     
