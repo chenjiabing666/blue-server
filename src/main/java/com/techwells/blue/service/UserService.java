@@ -2,6 +2,7 @@ package com.techwells.blue.service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.techwells.blue.domain.EnterpriseAuth;
 import com.techwells.blue.domain.User;
 import com.techwells.blue.util.PagingTool;
 
@@ -37,6 +38,12 @@ public interface UserService {
 	 */
 	Object modifyUser(User user)throws Exception;
 	
+	/**
+	 * 修改用户信息，返回1或者0
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
 	int modifyUserReturnCount(User user)throws Exception;
 	
 	
@@ -89,6 +96,48 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	Object cancelBindAccount(Integer userId,Integer type)throws Exception;
+
+	/**
+	 * 修改密码
+	 * @param userId  用户Id
+	 * @param oldPwd  旧密码
+	 * @param newPwd  新密码
+	 * @return
+	 * @throws Exception
+	 */
+	Object modifyPwd(Integer userId, String oldPwd, String newPwd)throws Exception;
+
+	/**
+	 * 企业认证
+	 * @param auth
+	 * @return
+	 * @throws Exception
+	 */
+	Object enterpriseAuth(EnterpriseAuth auth)throws Exception;
+
+	/**
+	 * 获取认证列表
+	 * @param pagingTool
+	 * @return
+	 * @throws Exception
+	 */
+	Object getAuthListBack(PagingTool pagingTool)throws Exception;
+
+	/**
+	 * 根据Id获取认证详情
+	 * @param authId 认证审核Id
+	 * @return
+	 * @throws Exception
+	 */
+	Object getAuthById(Integer authId)throws Exception;
+
+	/**
+	 * 认证审核通过
+	 * @param authIds  认证Id数组
+	 * @return
+	 * @throws Exception
+	 */
+	Object authExaminPass(String[] authIds)throws Exception;
 	
 	
 	

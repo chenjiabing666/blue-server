@@ -49,8 +49,8 @@ server:
 mybatis:
   # 指定mapper配置文件的位置
   mapper-locations: classpath:/mappers/*.xml
-#  configuration:
-#    map-underscore-to-camel-case: true   # 启用驼峰方式
+  configuration:
+    map-underscore-to-camel-case: true   # 启用驼峰方式
 
 
 

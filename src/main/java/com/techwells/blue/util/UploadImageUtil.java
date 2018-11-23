@@ -13,13 +13,13 @@ import net.coobird.thumbnailator.geometry.Position;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
-import com.qiniu.common.QiniuException;
-import com.qiniu.common.Zone;
-import com.qiniu.http.Response;
-import com.qiniu.storage.Configuration;
-import com.qiniu.storage.UploadManager;
-import com.qiniu.storage.model.DefaultPutRet;
-import com.qiniu.util.Auth;
+//import com.qiniu.common.QiniuException;
+//import com.qiniu.common.Zone;
+//import com.qiniu.http.Response;
+//import com.qiniu.storage.Configuration;
+//import com.qiniu.storage.UploadManager;
+//import com.qiniu.storage.model.DefaultPutRet;
+//import com.qiniu.util.Auth;
 
 public class UploadImageUtil {
 
@@ -27,7 +27,7 @@ public class UploadImageUtil {
 	private static  String secretKey = "u4U7YIcRdnuho69r-7r-BN2BBTC-JUHckkCwjH0z";
 	private static  String bucket = "blog-img";   //存储库的名称
 	private static  String domain="http://ono60m7tl.bkt.clouddn.com/";     //域名
-	private static  Zone location=Zone.zone2();   //存储空间的地域
+//	private static  Zone location=Zone.zone2();   //存储空间的地域
 
 	/**
 	 * 生成缩略图
@@ -102,28 +102,28 @@ public class UploadImageUtil {
  	 * @param fileName
  	 * @throws Exception
  	 */
-	public static void uploadToQiuNiu(byte[] uploadBytes,String fileName) throws Exception {
-
-		// 构造一个带指定Zone对象的配置类
-		Configuration cfg = new Configuration(location);
-		// ...其他参数参考类注释
-		UploadManager uploadManager = new UploadManager(cfg);
-		// ...生成上传凭证，然后准备上传
-		// 默认不指定key的情况下，以文件内容的hash值作为文件名
-		String key =fileName;  //文件名称
-		// byte[] b = "hello qiniu cloud".getBytes("utf-8");
-		Auth auth = Auth.create(accessKey, secretKey);
-		String upToken = auth.uploadToken(bucket);
-		Response response = uploadManager.put(uploadBytes, key, upToken);
-		// 解析上传成功的结果
-		DefaultPutRet putRet = new Gson().fromJson(response.bodyString(),
-				DefaultPutRet.class);
-		System.out.println(putRet.key);
-		System.out.println(putRet.hash);
-	}
+//	public static void uploadToQiuNiu(byte[] uploadBytes,String fileName) throws Exception {
+//
+//		// 构造一个带指定Zone对象的配置类
+//		Configuration cfg = new Configuration(location);
+//		// ...其他参数参考类注释
+//		UploadManager uploadManager = new UploadManager(cfg);
+//		// ...生成上传凭证，然后准备上传
+//		// 默认不指定key的情况下，以文件内容的hash值作为文件名
+//		String key =fileName;  //文件名称
+//		// byte[] b = "hello qiniu cloud".getBytes("utf-8");
+//		Auth auth = Auth.create(accessKey, secretKey);
+//		String upToken = auth.uploadToken(bucket);
+//		Response response = uploadManager.put(uploadBytes, key, upToken);
+//		// 解析上传成功的结果
+//		DefaultPutRet putRet = new Gson().fromJson(response.bodyString(),
+//				DefaultPutRet.class);
+//		System.out.println(putRet.key);
+//		System.out.println(putRet.hash);
+//	}
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("ce");
-		UploadImageUtil.uploadToQiuNiu("chen".getBytes(),"12334455");
+//		UploadImageUtil.uploadToQiuNiu("chen".getBytes(),"12334455");
 	}
 }

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.EnterpriseAuthMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.EnterpriseAuth" >
+    <id column="enterprise_auth_id" property="enterpriseAuthId" jdbcType="INTEGER" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="license" property="license" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="organization" property="organization" jdbcType="VARCHAR" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    enterprise_auth_id, company_name, user_id, license, status, organization, activated, 
+    deleted, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_enterprise_auth
+    where enterprise_auth_id = #{enterpriseAuthId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_enterprise_auth
+    where enterprise_auth_id = #{enterpriseAuthId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.EnterpriseAuth" >
+    <selectKey resultType="java.lang.Integer" keyProperty="enterpriseAuthId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_enterprise_auth (company_name, user_id, license, 
+      status, organization, activated, 
+      deleted, created_date, updated_date
+      )
+    values (#{companyName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{license,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{organization,jdbcType=VARCHAR}, #{activated,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.EnterpriseAuth" >
+    <selectKey resultType="java.lang.Integer" keyProperty="enterpriseAuthId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_enterprise_auth
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="license != null" >
+        license,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="organization != null" >
+        organization,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="license != null" >
+        #{license,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="organization != null" >
+        #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.EnterpriseAuth" >
+    update t_enterprise_auth
+    <set >
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="license != null" >
+        license = #{license,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="organization != null" >
+        organization = #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where enterprise_auth_id = #{enterpriseAuthId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.EnterpriseAuth" >
+    update t_enterprise_auth
+    set company_name = #{companyName,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      license = #{license,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      organization = #{organization,jdbcType=VARCHAR},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where enterprise_auth_id = #{enterpriseAuthId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 
+  	List<AuthUserVos> selectAuthUserVoList(PagingTool pagingTool);
+   -->
+  <select id="selectAuthUserVoList" resultType="com.techwells.blue.domain.rs.AuthUserVos" parameterType="com.techwells.blue.util.PagingTool">
+  	SELECT
+	a.*, u.mobile
+FROM
+	t_enterprise_auth a,
+	t_user u
+	<where>
+		<if test="params.company!=null">
+			and a.company_name=#{params.company}
+		</if>
+		
+		<if test="params.mobile!=null">
+			and u.mobile=#{params.mobile}
+		</if>
+		and u.user_id = a.user_id
+	</where>
+	ORDER BY a.created_date DESC
+	limit #{startNum},#{pageSize}
+</select>
+  
+<!-- 
+	int countTotalAuthUserVoList(PagingTool pagingTool);
+ -->
+<select id="countTotalAuthUserVoList" resultType="java.lang.Integer">
+	SELECT
+	count(*)
+FROM
+	t_enterprise_auth a,
+	t_user u
+	<where>
+		<if test="params.company!=null">
+			and a.company_name=#{params.company}
+		</if>
+		
+		<if test="params.mobile!=null">
+			and u.mobile=#{params.mobile}
+		</if>
+		and u.user_id = a.user_id
+	</where>
+</select>
+
+<!-- 
+	 AuthUserVos selectAuthById(Integer authId);
+ -->
+<select id="selectAuthById" resultType="com.techwells.blue.domain.rs.AuthUserVos">
+	SELECT
+	a.*, u.mobile
+FROM
+	t_enterprise_auth a,
+	t_user u
+	where
+		u.user_id = a.user_id 
+		and a.enterprise_auth_id=#{authId}
+</select>
+  
+</mapper>

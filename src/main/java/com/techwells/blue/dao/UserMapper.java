@@ -1,6 +1,10 @@
 package com.techwells.blue.dao;
 
+import java.util.List;
+
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.rs.UserRecommendVos;
+import com.techwells.blue.util.PagingTool;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer userId);
@@ -35,6 +39,26 @@ public interface UserMapper {
      * @return
      */
     User selectUserByEmail(String email);
+    
+    
+    /**
+     * 分页获取用户信息
+     * @param pagingTool
+     * @return
+     */
+    List<User> selectUserList(PagingTool pagingTool);
+    
+    int countTotalUserList(PagingTool pagingTool);
+    
+    /**
+     * 获取用户详情，包括推荐人
+     * @param userId
+     * @return
+     */
+    UserRecommendVos selectRecommenUserByUserId(Integer userId);
+    
+    
+    
     
     
 }

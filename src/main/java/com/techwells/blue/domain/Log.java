@@ -1,7 +1,5 @@
 package com.techwells.blue.domain;
 
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 日志的实体类

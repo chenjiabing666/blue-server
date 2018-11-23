@@ -1,4 +1,5 @@
 package com.techwells.blue.controller;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,11 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.druid.util.StringUtils;
 import com.techwells.blue.util.BlueConstants;
 import com.techwells.blue.util.CRCode;
+import com.techwells.blue.util.CrcodeUtils;
 import com.techwells.blue.util.SendMailUtils;
 import com.techwells.blue.util.SendSmsUtil;
 import com.techwells.blue.util.UploadFileUtils;
+import com.techwells.blue.domain.EnterpriseAuth;
 import com.techwells.blue.domain.User;
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.rs.UserRecommendVos;
 import com.techwells.blue.service.UserService;
 import com.techwells.blue.util.PagingTool;
 import com.techwells.blue.util.ResultInfo;
@@ -96,7 +100,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/user/getUserById")
-	@ApiOperation(value="获取用户详情",response=User.class,hidden=false)
+	@ApiOperation(value="获取用户详情",response=UserRecommendVos.class,hidden=false)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
 	})
@@ -124,16 +128,16 @@ public class UserController {
 	
 	
 	/**
-	 * 修改用户
+	 * 修改用户基本信息
 	 * @param request
 	 * @return
 	 */
 	@PostMapping("/user/modifyUser")
-	@ApiOperation(value="修改用户信息",response=User.class,hidden=false)
+	@ApiOperation(value="修改用户基本信息（用户名，头像）",response=ResultInfo.class,hidden=false)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id 必填", defaultValue = "1"),
 		@ApiImplicitParam(paramType = "query", name = "nickName", dataType="String", required = false, value = "用户名 选填", defaultValue = "爱撒谎的男孩"),
-//		@ApiImplicitParam(paramType = "formData", name = "userIcon", dataType="file", required =false, value = "用户头像 选填"),
+//		@ApiImplicitParam(paramType = "form", name = "userIcon", dataType="multipart/form-data", required =false, value = "用户头像 选填"),
 	})
 	public Object modifyUser(HttpServletRequest request,@RequestParam(value="userIcon",required=false)MultipartFile userIcon){
 		ResultInfo resultInfo=new ResultInfo();
@@ -230,23 +234,35 @@ public class UserController {
 		}
 	}
 	
-	
 	/**
-	 * 分页获取用户列表
+	 * 分页获取用户列表（后台）
 	 * @param request
 	 * @return
 	 */
 	@PostMapping("/user/getUserList")
-	@ApiOperation(value="分页获取用户列表",response=User.class,hidden=true)
+	@ApiOperation(value="分页获取用户列表（后台）",response=User.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="Interger", required = true, value = "当前的页数", defaultValue = "1"),
-		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="Interger", required = true, value = "每页显示的数量", defaultValue = "10"),
+		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="int", required = true, value = "每页显示的数量", defaultValue = "10"),
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = false, value = "用户Id", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = false, value = "手机号码", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "nickName", dataType="String", required = false, value = "昵称", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "gender", dataType="int", required = false, value = "性别 1男 2 女 ", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "userType", dataType="int", required = false, value = "用户类型：1、普通用户，2、企业用户，3、vip", defaultValue = ""),
 	})
 	public Object getUserList(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
 		
 		String pageNum=request.getParameter("pageNum");
 		String pageSize=request.getParameter("pageSize");
+		
+		//筛选条件
+		String userId=request.getParameter("userId"); //用户Id
+		String mobile=request.getParameter("mobile");  //手机号码
+		String nickName=request.getParameter("nickName");  //昵称
+		String gender=request.getParameter("gender");  //性别 1男 2 女 
+		String userType=request.getParameter("userType");  //用户类型：1、普通用户，2、企业用户，3、vip
+		
 		
 		//校验数据
 		if (StringUtils.isEmpty(pageNum)) {
@@ -266,6 +282,26 @@ public class UserController {
 		
 		//封装过滤条件
 		Map<String, Object> params=new HashMap<String, Object>();
+		
+		if (!StringUtils.isEmpty(userId)) {
+			params.put("userId", Integer.parseInt(userId));
+		}
+		
+		if (!StringUtils.isEmpty(mobile)) {
+			params.put("mobile",mobile);
+		}
+		
+		if (!StringUtils.isEmpty(nickName)) {
+			params.put("nickName", nickName);
+		}
+		
+		if (!StringUtils.isEmpty(gender)) {
+			params.put("gender", Integer.parseInt(gender));
+		}
+		
+		if (!StringUtils.isEmpty(userType)) {
+			params.put("userType", Integer.parseInt(userType));
+		}
 		
 		pagingTool.setParams(params);
 		
@@ -375,7 +411,6 @@ public class UserController {
 			return resultInfo;
 		}
 	}
-	
 	
 	/**
 	 * 获取验证码
@@ -761,7 +796,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/user/bindEmail")
-	@ApiOperation(value="绑定邮箱",response=ResultInfo.class,hidden=false)
+	@ApiOperation(value="绑定邮箱",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
 		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = true, value = "手机号码", defaultValue = ""),
@@ -839,7 +874,6 @@ public class UserController {
 		
 		
 		//修改
-		
 		int count=0;
 		try {
 			count=userService.modifyUserReturnCount(user);
@@ -860,8 +894,6 @@ public class UserController {
 		result.setMessage("绑定成功");
 		return result;
 	}
-	
-	
 	
 	
 	/**
@@ -902,7 +934,6 @@ public class UserController {
 		
 		
 		//没有被绑定，那么需要发送验证链接
-		
 		try {
 			SendMailUtils.sendTextEmail("蓝色按钮", "点击链接绑定邮箱："+bindEmailUrl, email);
 		} catch (Exception e) {
@@ -914,17 +945,6 @@ public class UserController {
 		resultInfo.setMessage("发送成功");
 		return resultInfo;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * 取消绑定邮箱或者手机号码
@@ -964,6 +984,363 @@ public class UserController {
 			return result;
 		}
 	}
+	
+	
+	/**
+	 * 忘记密码通过手机号码找回
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/forgetPwdByMobile")
+	@ApiOperation(value="忘记密码通过手机号码找回",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = true, value = "手机号码", defaultValue = "18796327106"),
+		@ApiImplicitParam(paramType = "query", name = "code", dataType="String", required = true, value = "验证码", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "newPwd", dataType="String", required = true, value = "密码", defaultValue = "123456"),
+	})
+	public Object forgetPwdByMobile(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String mobile=request.getParameter("mobile");  //手机号码
+		String code=request.getParameter("code"); //验证码
+		String newPwd=request.getParameter("newPwd"); //新密码
+		
+		if (StringUtils.isEmpty(mobile)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("手机号码不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(code)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("验证码不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(newPwd)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("新密码不能为空");
+			return resultInfo;
+		}
+		
+		
+		User user=null;
+		try {
+			user=userService.getUserByMobile(mobile);
+		} catch (Exception e) {
+			logger.error("获取用户信息异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+		
+		if (user==null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("该号码未注册");
+			return resultInfo;
+		}
+		
+		boolean flag=false;
+		//该用户已经注册了，判断验证码
+		try {
+				flag=CrcodeUtils.validate(request.getSession(), mobile, code);
+		} catch (Exception e) {
+			logger.error("校验验证码异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+		
+		if (flag==false) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("验证码不正确");
+			return resultInfo;
+		}
+		
+		//验证码正确，需要修改用户信息
+		user.setPassword(newPwd);
+		try {
+			Object object=userService.modifyUser(user);
+			return object;
+		} catch (Exception e) {
+			logger.error("修改用户信息异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+	}
+	
+	/**
+	 * 修改密码
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/modifyPwd")
+	@ApiOperation(value="修改密码",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "oldPwd", dataType="String", required = true, value = "旧密码", defaultValue = "126266"),
+		@ApiImplicitParam(paramType = "query", name = "newPwd", dataType="String", required = true, value = "新密码", defaultValue = "123456"),
+	})
+	public Object modifyPwd(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String userId=request.getParameter("userId"); //用户Id
+		String oldPwd=request.getParameter("oldPwd");  //旧密码
+		String newPwd=request.getParameter("newPwd");  //新密码
+		
+		if (StringUtils.isEmpty(userId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户Id不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(oldPwd)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("旧密码不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(newPwd)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("新密码不能为空");
+			return resultInfo;
+		}
+		
+		
+		try {
+			Object object=userService.modifyPwd(Integer.parseInt(userId),oldPwd,newPwd);
+			return object;
+		} catch (Exception e) {
+			logger.error("修改密码异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+	}
+	
+	/**
+	 * 企业认证
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/enterpriseAuth")
+	@ApiOperation(value="企业认证",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "company", dataType="String", required = true, value = "公司名称", defaultValue = "泰闻信息科技有限公司"),
+		@ApiImplicitParam(paramType = "query", name = "organization", dataType="String", required = true, value = "组织机构", defaultValue = "法轮功"),
+	})
+	public Object enterpriseAuth(HttpServletRequest request,@RequestParam(value="license",required=false)MultipartFile license){
+		ResultInfo resultInfo=new ResultInfo();
+		String userId=request.getParameter("userId");  //用户Id
+		String company=request.getParameter("company");  //公司名称
+		String organization=request.getParameter("organization");  //组织机构
+		
+		if (StringUtils.isEmpty(userId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户Id不能为空");
+			return resultInfo;
+		}
+		
+		
+		if (StringUtils.isEmpty(company)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("公司名称不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(organization)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("组织机构不能为空");
+			return resultInfo;
+		}
+		
+		if (license==null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("营业执照不能为空");
+			return resultInfo;
+		}
+		
+		
+		//封装数据
+		EnterpriseAuth auth=new EnterpriseAuth();
+		auth.setUserId(Integer.parseInt(userId));
+		auth.setCompanyName(company);
+		auth.setCreatedDate(new Date());
+		auth.setOrganization(organization);
+		auth.setStatus(0);
+		
+		//上传营业执照
+		String fileName=System.currentTimeMillis()+license.getOriginalFilename();
+		String path=BlueConstants.UPLOAD_PATH+"license-image/";
+		File targetFile=new File(path,fileName);
+		String url=BlueConstants.UPLOAD_URL+"license-image/"+fileName;
+		
+		try {
+			UploadFileUtils.createChildFolder(targetFile);
+		} catch (Exception e) {
+			logger.error("创建子文件夹异常",e);
+			resultInfo.setCode("-");
+			resultInfo.setMessage("创建子文件夹异常");
+			return resultInfo;
+		}
+		
+		
+		try {
+			license.transferTo(targetFile);
+		} catch (Exception e) {
+			logger.error("上传营业执照异常",e);
+			resultInfo.setCode("-");
+			resultInfo.setMessage("上传营业执照异常");
+			return resultInfo;
+		}
+		
+		auth.setLicense(url);
+		
+		
+		try {
+			Object object=userService.enterpriseAuth(auth);
+			return object;
+		} catch (Exception e) {
+			logger.error("添加异常",e);
+			resultInfo.setCode("-");
+			resultInfo.setMessage("添加异常");
+			return resultInfo;
+		}
+		
+	}
+	
+	/**
+	 * 获取认证审核的列表（后台）
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/getAuthListBack")
+	@ApiOperation(value="获取认证审核的列表（后台）",response=ResultInfo.class,hidden=true)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="Interger", required = true, value = "当前的页数", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="Interger", required = true, value = "每页显示的数量", defaultValue = "10"),
+		@ApiImplicitParam(paramType = "query", name = "company", dataType="String", required = false, value = "公司名称,可选", defaultValue = "泰闻信息科技有限公司"),
+		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = false, value = "用户账号", defaultValue = "18796327106"),
+	})
+	public Object getAuthListBack(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String pageNum=request.getParameter("pageNum");
+		String pageSize=request.getParameter("pageSize");
+		
+		String mobile=request.getParameter("mobile");  //用户账号
+		String company=request.getParameter("company"); //公司名称
+		
+		//校验数据
+		if (StringUtils.isEmpty(pageNum)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("当前页数不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(pageSize)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("每页显示的数量不能为空");
+			return resultInfo;
+		}
+		
+		//构造分页数据
+		PagingTool pagingTool=new PagingTool(Integer.parseInt(pageNum),Integer.parseInt(pageSize));
+		
+		//封装过滤条件
+		Map<String, Object> params=new HashMap<String, Object>();
+		if (!StringUtils.isEmpty(company)) {
+			params.put("company", company);
+		}
+		
+		
+		if (!StringUtils.isEmpty(mobile)) {
+			params.put("mobile", mobile);
+		}
+		pagingTool.setParams(params);
+		
+		try {
+			Object object=userService.getAuthListBack(pagingTool);
+			return object;
+		} catch (Exception e) {
+			logger.error("获取认证列表异常",e);
+			resultInfo.setCode("-");
+			resultInfo.setMessage("获取认证列表异常");
+			return resultInfo;
+		}
+		
+	}
+	
+	
+	/**
+	 * 根据Id获取审核详情（后台）
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/getAuthById")
+	@ApiOperation(value="根据Id获取审核详情（后台）",response=ResultInfo.class,hidden=true)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "authId", dataType="int", required = true, value = "认证Id", defaultValue = "1"),
+	})
+	public Object getAuthById(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String authId=request.getParameter("authId");  //认证Id
+		
+		if (StringUtils.isEmpty(authId)) {
+			resultInfo.setCode("-");
+			resultInfo.setMessage("认证Id不能为空");
+			return resultInfo;
+		}
+		
+		try {
+			Object object=userService.getAuthById(Integer.parseInt(authId));
+			return object;
+		} catch (Exception e) {
+			logger.error("获取认证详情异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("获取认证详情异常");
+			return resultInfo;
+		}
+	}
+
+	
+	/**
+	 * 认证批量审核通过（后台）
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/authExaminPass")
+	@ApiOperation(value="认证批量审核通过（后台）",response=ResultInfo.class,hidden=true)
+	@ApiImplicitParams({
+//		@ApiImplicitParam(paramType = "query", name = "authIds", dataType="int", required = true, value = "认证Id", defaultValue = "1"),
+	})
+	public Object authExaminPass(HttpServletRequest request,String[] authIds){
+		ResultInfo resultInfo=new ResultInfo();
+		
+		if (authIds==null||authIds.length==0) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("认证Id不能为空");
+			return resultInfo;
+		}
+		
+		try {
+			Object object=userService.authExaminPass(authIds);
+			return object;
+		} catch (Exception e) {
+			logger.error("认证审核通过异常");
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("认证审核通过异常");
+			return resultInfo;
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

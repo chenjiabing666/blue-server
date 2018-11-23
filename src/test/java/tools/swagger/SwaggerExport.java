@@ -22,7 +22,7 @@ public class SwaggerExport {
 	            .withGeneratedExamples()
 	            .withoutInlineSchema()
 	            .build();
-	    Swagger2MarkupConverter converter = Swagger2MarkupConverter.from(new URL("http://localhost:8080/demo/v2/api-docs"))   //url是可以访问的在线json数据的url
+	    Swagger2MarkupConverter converter = Swagger2MarkupConverter.from(new URL("http://localhost:8080/blue-server/v2/api-docs"))   //url是可以访问的在线json数据的url
 	            .withConfig(config)
 	            .build();
 	    converter.toFile(outputFile);

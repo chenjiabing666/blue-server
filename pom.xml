@@ -158,12 +158,6 @@
 			<version>3.17</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.2</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<!-- aliyun短信 -->
 		<dependency>
@@ -178,7 +172,7 @@
 			<version>1.0.0</version>
 			<scope>compile</scope>
 		</dependency>
-
+		
 
 		<!-- 七牛云 -->
 		<dependency>
@@ -208,13 +202,21 @@
 			<version>0.1.4</version>
 			<scope>compile</scope>
 		</dependency>
+		
 
 		<!-- java mail邮件依赖 -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-		</dependency>
+		<dependency >
+            <groupId >javax.mail </groupId >
+            <artifactId >mail </artifactId >
+            <version >1.4.5 </version >
+        </dependency >
+        <dependency >
+            <groupId >com.sun.mail </groupId >
+            <artifactId >javax.mail </artifactId >
+            <version >1.5.4 </version >
+        </dependency >
+
+
 
 		<!-- 缩略图的jar -->
 		<dependency>
