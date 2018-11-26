@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.InformationMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Information" >
+    <id column="information_id" property="informationId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="point" property="point" jdbcType="INTEGER" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.techwells.blue.domain.Information" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    information_id, title, module_id, admin_id, type, pay_type, price, point, file_url, 
+    status, activated, deleted, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_information
+    where information_id = #{informationId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_information
+    where information_id = #{informationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.Information" >
+    <selectKey resultType="java.lang.Integer" keyProperty="informationId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_information (title, module_id, admin_id, 
+      type, pay_type, price, 
+      point, file_url, status, 
+      activated, deleted, create_time, 
+      update_time, content)
+    values (#{title,jdbcType=VARCHAR}, #{moduleId,jdbcType=INTEGER}, #{adminId,jdbcType=INTEGER}, 
+      #{type,jdbcType=INTEGER}, #{payType,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{point,jdbcType=INTEGER}, #{fileUrl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Information" >
+    <selectKey resultType="java.lang.Integer" keyProperty="informationId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_information
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="moduleId != null" >
+        module_id,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="fileUrl != null" >
+        file_url,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleId != null" >
+        #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=INTEGER},
+      </if>
+      <if test="fileUrl != null" >
+        #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Information" >
+    update t_information
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleId != null" >
+        module_id = #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=INTEGER},
+      </if>
+      <if test="fileUrl != null" >
+        file_url = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where information_id = #{informationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.techwells.blue.domain.Information" >
+    update t_information
+    set title = #{title,jdbcType=VARCHAR},
+      module_id = #{moduleId,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      point = #{point,jdbcType=INTEGER},
+      file_url = #{fileUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where information_id = #{informationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Information" >
+    update t_information
+    set title = #{title,jdbcType=VARCHAR},
+      module_id = #{moduleId,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      point = #{point,jdbcType=INTEGER},
+      file_url = #{fileUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where information_id = #{informationId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 
+  	Information selectInformationById(Integer informationId);
+   -->
+  <select id="selectInformationById" resultType="com.techwells.blue.domain.rs.AdminInformationVos">
+  	SELECT
+	i.*, a.admin_name
+FROM
+	t_admin a
+RIGHT JOIN t_information i ON i.admin_id = a.admin_id
+WHERE
+	i.information_id = #{informationId}
+  </select>
+  
+  
+  <!-- 
+  	List<AdminInformationVos> selectAdminInformationListBack(PagingTool pagingTool);
+   -->
+<select id="selectAdminInformationListBack" resultType="com.techwells.blue.domain.rs.AdminInformationVos" parameterType="com.techwells.blue.util.PagingTool">
+	  	SELECT
+		i.*, a.admin_name
+	FROM
+		t_admin a
+	RIGHT JOIN t_information i ON i.admin_id = a.admin_id
+	<where>
+		<if test="params.title!=null">
+			and i.title like "%"#{params.title}"%"
+		</if>
+		
+		<if test="params.payType!=null">
+			and i.pay_type=#{params.payType}
+		</if>
+		
+		<if test="params.type!=null">
+			and i.type=#{params.type}
+		</if>
+	</where>
+	limit #{startNum},#{pageSize}
+</select>
+
+<!-- 
+	int countTotalAdminInformationListBack(PagingTool pagingTool);
+ -->
+<select id="countTotalAdminInformationListBack" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool" >
+	SELECT
+		count(*)
+	FROM
+		t_admin a
+	RIGHT JOIN t_information i ON i.admin_id = a.admin_id
+	<where>
+		<if test="params.title!=null">
+			and i.title like "%"#{params.title}"%"
+		</if>
+		
+		<if test="params.payType!=null">
+			and i.pay_type=#{params.payType}
+		</if>
+		
+		<if test="params.type!=null">
+			and i.type=#{params.type}
+		</if>
+	</where>
+</select>
+  
+
+<!-- 
+	List<AdminInformationVos> selectAdminInformationListForeground(PagingTool pagingTool);
+ --> 
+<select id="selectAdminInformationListForeground" resultType="com.techwells.blue.domain.rs.AdminInformationVos" parameterType="com.techwells.blue.util.PagingTool">
+	SELECT
+	i.*
+FROM
+	t_information i
+INNER JOIN t_module m ON m.module_id = i.module_id
+
+<where>
+	<if test="params.title!=null">
+		and i.title like "%"#{params.title}"%"
+	</if>
+	
+	<if test="params.type!=null">
+		and i.type=#{params.type}
+	</if>
+	
+	<if test="params.moduleName!=null">
+		and m.module_name = #{params.moduleName}
+	</if>
+</where>
+ORDER BY i.create_time DESC
+limit #{startNum},#{pageSize}
+</select>
+  
+
+<!-- 
+	int countTotalAdminInformationListForeground(PagingTool pagingTool);
+ -->
+<select id="countTotalAdminInformationListForeground" resultType="java.lang.Integer">
+	SELECT
+	count(*)
+FROM
+	t_information i
+INNER JOIN t_module m ON m.module_id = i.module_id
+<where>
+	<if test="params.title!=null">
+		and i.title like "%"#{params.title}"%"
+	</if>
+	
+	<if test="params.type!=null">
+		and i.type=#{params.type}
+	</if>
+	
+	<if test="params.moduleName!=null">
+		and m.module_name = #{params.moduleName}
+	</if>
+</where>
+</select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>

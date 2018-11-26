@@ -196,4 +196,61 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where admin_id = #{adminId,jdbcType=INTEGER}
   </update>
+  
+ <!-- 
+ Admin selectAdminByAccount(@Param("account")String account,@Param("activated")Integer activated);
+  -->
+ <select id="selectAdminByAccount" resultMap="BaseResultMap">
+ 	select * from t_admin
+ 	<where>
+ 		<if test="activated!=null">
+ 			and activated=#{activated}
+ 		</if>
+ 		<if test="account!=null">
+ 			and account=#{account}
+ 		</if>
+ 	</where>
+ </select>
+ 
+ 
+ <!-- 
+ 	List<Admin> selectAdminBatch(PagingTool pagingTool);
+  -->
+  <select id="selectAdminBatch" parameterType="com.techwells.blue.util.PagingTool" resultMap="BaseResultMap">
+  	select * from t_admin 
+  	<where>
+  		<if test="params.account!=null">
+  			and account=#{params.account}
+  		</if>
+  	</where>
+  	
+  	limit #{startNum},#{pageSize}
+  </select>
+ 
+ <!-- 
+ 	int countTotal(PagingTool pagingTool);
+  -->
+ <select id="countTotal" parameterType="com.techwells.blue.util.PagingTool" resultType="java.lang.Integer">
+ 	select count(*) from t_admin 
+  	<where>
+  		<if test="params.account!=null">
+  			and account=#{params.account}
+  		</if>
+  	</where>
+ </select>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 </mapper>

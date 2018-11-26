@@ -682,7 +682,6 @@ public class UserController {
 		return resultInfo;
 	}
 	
-	
 	/**
 	 * 绑定手机号码
 	 * @param request
@@ -791,23 +790,22 @@ public class UserController {
 	
 	
 	/**
-	 * 绑定邮箱
+	 * 绑定邮箱（用户点击发送过去的链接）
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/user/bindEmail")
-	@ApiOperation(value="绑定邮箱",response=ResultInfo.class,hidden=true)
+	@PostMapping("/user/checkEmail")
+	@ApiOperation(value="绑定邮箱（用户点击发送过去的链接）",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
-		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = true, value = "手机号码", defaultValue = ""),
-		@ApiImplicitParam(paramType = "query", name = "code", dataType="String", required = true, value = "验证码", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "email", dataType="String", required = true, value = "邮箱", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "code", dataType="String", required = true, value = "随机数字", defaultValue = ""),
 	})
-	public Object bindEmail(HttpServletRequest request){
+	public Object checkEmail(HttpServletRequest request){
 		ResultInfo result=new ResultInfo();
 		String userId=request.getParameter("userId"); //用户Id
-		
-		String mobile=request.getParameter("mobile");  //手机号码
-		String code=request.getParameter("code");  //验证码 
+		String email=request.getParameter("email");  //邮箱
+		String code=request.getParameter("code");  //随机数字
 		
 		if (StringUtils.isEmpty(userId)) {
 			result.setCode("-1");
@@ -815,84 +813,28 @@ public class UserController {
 			return result;
 		}
 		
-		if (StringUtils.isEmpty(mobile)) {
+		if (StringUtils.isEmpty(email)) {
 			result.setCode("-1");
-			result.setMessage("手机号码不能为空");
+			result.setMessage("邮箱不能为空");
 			return result;
 		}
 		
 		if (StringUtils.isEmpty(code)) {
 			result.setCode("-1");
-			result.setMessage("验证码不能为空");
+			result.setMessage("随机数字不能为空");
 			return result;
 		}
 		
 		
-		User user=null;
-		// 绑定手机号码
 		try {
-			user = userService.getUserByMobile(mobile);
+			Object object=userService.checkEmail(Integer.parseInt(userId),email,code);
+			return object;
 		} catch (Exception e) {
-			logger.error("获取用户信息异常", e);
+			logger.error("绑定邮箱异常",e);
 			result.setCode("-1");
-			result.setMessage("异常");
+			result.setMessage("绑定邮箱异常");
 			return result;
 		}
-
-		// 绑定手机号码肯定是没有手机号码，所以不用判断是否是同一个人
-		if (user != null) {
-			result.setCode("-1");
-			result.setMessage("该手机号已经被绑定");
-			return result;
-		}
-
-		// 判断验证码是否正确
-		CRCode crCode = (CRCode) request.getSession().getAttribute("code"); // 获取验证码
-
-		if (crCode == null) {
-			result.setCode("-1");
-			result.setMessage("请先发送验证码");
-			return result;
-		}
-
-		if (!mobile.equals(crCode.getCrCode())) {
-			result.setCode("-1");
-			result.setMessage("请先发送验证码");
-			return result;
-		}
-
-		if (!crCode.getCrCode().equals(code)) {
-			result.setCode("-1");
-			result.setMessage("验证码不正确");
-			return result;
-		}
-
-		// user=null
-		user = new User(); // 新建
-		user.setMobile(mobile);// 绑定
-		user.setUserId(Integer.parseInt(userId));
-		
-		
-		//修改
-		int count=0;
-		try {
-			count=userService.modifyUserReturnCount(user);
-		} catch (Exception e) {
-			logger.error("修改用户信息异常", e);
-			result.setCode("-1");
-			result.setMessage("异常");
-			return result;
-		}
-		
-		
-		if (count==0) {
-			result.setCode("-1");
-			result.setMessage("绑定失败");
-			return result;
-		}
-		
-		result.setMessage("绑定成功");
-		return result;
 	}
 	
 	
@@ -905,14 +847,22 @@ public class UserController {
 	@ApiOperation(value="发送链接到指定的邮箱",response=ResultInfo.class,hidden=false)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "email", dataType="String", required = true, value = "邮箱地址", defaultValue = "123456@163.com"),
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
 	})
 	public Object sendEmailUrl(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
 		String email=request.getParameter("email"); //邮箱账号
+		String userId=request.getParameter("userId");  //用户Id
 		
 		if (StringUtils.isEmpty(email)) {
 			resultInfo.setCode("-1");
 			resultInfo.setMessage("邮箱地址不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(userId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户Id不能为空");
 			return resultInfo;
 		}
 		
@@ -933,9 +883,34 @@ public class UserController {
 		}
 		
 		
+		String code=SendSmsUtil.getSixRadam(); //生成随机的六位数字
+		user=new User();
+		user.setUserId(Integer.parseInt(userId));
+		user.setEmailCode(code);
+		
+		//更新数据
+		int count=0;
+		try {
+			count = userService.modifyUserReturnCount(user);
+		} catch (Exception e) {
+			logger.error("修改用户信息异常");
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("修改用户信息异常");
+			return resultInfo;
+		}
+		
+		if (count==0) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("修改用户信息失败");
+			return resultInfo;
+		}
+		
+		//修改成功，可以发送链接
+		String url=bindEmailUrl+"email="+email+"&userId="+userId+"&code="+code;  //验证的链接
+		
 		//没有被绑定，那么需要发送验证链接
 		try {
-			SendMailUtils.sendTextEmail("蓝色按钮", "点击链接绑定邮箱："+bindEmailUrl, email);
+			SendMailUtils.sendTextEmail("蓝色按钮", "点击链接绑定邮箱："+url, email);
 		} catch (Exception e) {
 			logger.error("发送邮件异常",e);
 			resultInfo.setCode("-1");

@@ -51,13 +51,13 @@ public class SendMailUtils {
 	private final static String IS_ENABLED_DEBUG_MOD = "true";
 
 	// 发件人
-	private static String from = "18796327106@163.com";
+	private static String from = "13648050230@163.com";
 
 	// 发件人的邮箱密码
-	private static String password = "as676767as";
+	private static String password = "taiwen111";
 	
 	// 收件人
-	private static String to = "1655378771@qq.com";
+	private static String to = "18796327106@163.com";
 
 	// 初始化连接邮件服务器的会话信息
 	private static Properties props = null;
@@ -74,7 +74,7 @@ public class SendMailUtils {
 	public static void main(String[] args) throws Exception {
 		
 		// 发送文本邮件
-		sendTextEmail("绑定邮箱", "亲爱的点击统一按钮，绑定邮箱账号", to);
+		sendTextEmail("应用市场", "从打错打错打错哒", to);
 	}
 
 	/**

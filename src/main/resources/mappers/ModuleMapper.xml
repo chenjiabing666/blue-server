@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.ModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Module" >
+    <id column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="high_score_max" property="highScoreMax" jdbcType="INTEGER" />
+    <result column="high_score_min" property="highScoreMin" jdbcType="INTEGER" />
+    <result column="medium_score_max" property="mediumScoreMax" jdbcType="INTEGER" />
+    <result column="medium_score_min" property="mediumScoreMin" jdbcType="INTEGER" />
+    <result column="low_score_max" property="lowScoreMax" jdbcType="INTEGER" />
+    <result column="low_score_min" property="lowScoreMin" jdbcType="INTEGER" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    module_id, module_name, description, high_score_max, high_score_min, medium_score_max, 
+    medium_score_min, low_score_max, low_score_min, activated, deleted, created_date, 
+    updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_module
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_module
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.Module" >
+    <selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_module (module_name, description, high_score_max, 
+      high_score_min, medium_score_max, medium_score_min, 
+      low_score_max, low_score_min, activated, 
+      deleted, created_date, updated_date
+      )
+    values (#{moduleName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{highScoreMax,jdbcType=INTEGER}, 
+      #{highScoreMin,jdbcType=INTEGER}, #{mediumScoreMax,jdbcType=INTEGER}, #{mediumScoreMin,jdbcType=INTEGER}, 
+      #{lowScoreMax,jdbcType=INTEGER}, #{lowScoreMin,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Module" >
+    <selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_module
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="moduleName != null" >
+        module_name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="highScoreMax != null" >
+        high_score_max,
+      </if>
+      <if test="highScoreMin != null" >
+        high_score_min,
+      </if>
+      <if test="mediumScoreMax != null" >
+        medium_score_max,
+      </if>
+      <if test="mediumScoreMin != null" >
+        medium_score_min,
+      </if>
+      <if test="lowScoreMax != null" >
+        low_score_max,
+      </if>
+      <if test="lowScoreMin != null" >
+        low_score_min,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="highScoreMax != null" >
+        #{highScoreMax,jdbcType=INTEGER},
+      </if>
+      <if test="highScoreMin != null" >
+        #{highScoreMin,jdbcType=INTEGER},
+      </if>
+      <if test="mediumScoreMax != null" >
+        #{mediumScoreMax,jdbcType=INTEGER},
+      </if>
+      <if test="mediumScoreMin != null" >
+        #{mediumScoreMin,jdbcType=INTEGER},
+      </if>
+      <if test="lowScoreMax != null" >
+        #{lowScoreMax,jdbcType=INTEGER},
+      </if>
+      <if test="lowScoreMin != null" >
+        #{lowScoreMin,jdbcType=INTEGER},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Module" >
+    update t_module
+    <set >
+      <if test="moduleName != null" >
+        module_name = #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="highScoreMax != null" >
+        high_score_max = #{highScoreMax,jdbcType=INTEGER},
+      </if>
+      <if test="highScoreMin != null" >
+        high_score_min = #{highScoreMin,jdbcType=INTEGER},
+      </if>
+      <if test="mediumScoreMax != null" >
+        medium_score_max = #{mediumScoreMax,jdbcType=INTEGER},
+      </if>
+      <if test="mediumScoreMin != null" >
+        medium_score_min = #{mediumScoreMin,jdbcType=INTEGER},
+      </if>
+      <if test="lowScoreMax != null" >
+        low_score_max = #{lowScoreMax,jdbcType=INTEGER},
+      </if>
+      <if test="lowScoreMin != null" >
+        low_score_min = #{lowScoreMin,jdbcType=INTEGER},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Module" >
+    update t_module
+    set module_name = #{moduleName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      high_score_max = #{highScoreMax,jdbcType=INTEGER},
+      high_score_min = #{highScoreMin,jdbcType=INTEGER},
+      medium_score_max = #{mediumScoreMax,jdbcType=INTEGER},
+      medium_score_min = #{mediumScoreMin,jdbcType=INTEGER},
+      low_score_max = #{lowScoreMax,jdbcType=INTEGER},
+      low_score_min = #{lowScoreMin,jdbcType=INTEGER},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </update>
+</mapper>

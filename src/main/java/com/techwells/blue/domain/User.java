@@ -22,6 +22,8 @@ public class User {
     private Integer userType;
 
     private String email;
+    
+    private String emailCode;
 
     private String mobile;
 
@@ -57,8 +59,17 @@ public class User {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+    
 
-    public String getUserIcon() {
+    public String getEmailCode() {
+		return emailCode;
+	}
+
+	public void setEmailCode(String emailCode) {
+		this.emailCode = emailCode;
+	}
+
+	public String getUserIcon() {
         return userIcon;
     }
 

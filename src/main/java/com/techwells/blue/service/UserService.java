@@ -138,6 +138,16 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	Object authExaminPass(String[] authIds)throws Exception;
+
+	/**
+	 * 绑定邮箱
+	 * @param userId
+	 * @param email
+	 * @param code
+	 * @return
+	 * @throws Exception
+	 */
+	Object checkEmail(Integer userId, String email, String code)throws Exception;
 	
 	
 	

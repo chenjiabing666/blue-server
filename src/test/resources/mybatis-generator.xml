@@ -58,29 +58,13 @@
 				sqlStatement="SELECT LAST_INSERT_ID()"></generatedKey>
 		</table> --> 
 		
-		<table tableName="t_admin" domainObjectName="Admin"
+		<table tableName="t_user" domainObjectName="User"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false">
-			<generatedKey column="admin_id" identity="true"
+			<generatedKey column="user_id" identity="true"
 				sqlStatement="SELECT LAST_INSERT_ID()"></generatedKey>
 		</table>
-		
-		<!-- <table tableName="t_admin_authority" domainObjectName="AdminAuthority"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false">
-			<generatedKey column="admin_id" identity="true"
-				sqlStatement="SELECT LAST_INSERT_ID()"></generatedKey>
-		</table>
-		
-		<table tableName="t_authority" domainObjectName="Authority"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false">
-			<generatedKey column="authority_id" identity="true"
-				sqlStatement="SELECT LAST_INSERT_ID()"></generatedKey>
-		</table> -->
 		
 		
 		

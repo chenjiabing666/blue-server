@@ -279,4 +279,36 @@ public class UserServiceImpl implements UserService{
 		return resultInfo;
 	}
 	
+	@PrintLog  //输出异常信息到日志文件中
+	@Override
+	public Object checkEmail(Integer userId, String email, String code)
+			throws Exception {
+		ResultInfo resultInfo=new ResultInfo();
+		User user=userMapper.selectByPrimaryKey(userId);
+		
+		if (user==null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户不存在");
+			return resultInfo;
+		}
+		
+		//如果随机数不同，那么不能绑定
+		if (!code.equals(user.getEmailCode())) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("请先发送链接");
+			return resultInfo;
+		}
+		
+		//绑定邮箱
+		user.setEmail(email);
+		int count=userMapper.updateByPrimaryKeySelective(user);
+		if (count==0) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("绑定失败");
+			return resultInfo;
+		}
+		resultInfo.setMessage("绑定成功");
+		return resultInfo;
+	}
+	
 }

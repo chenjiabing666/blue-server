@@ -11,7 +11,6 @@ public class ResultInfo {
 	private String message = "";    //提示信息
 	private int total = 0;   //查询到的总数
 	private Object result;  //封装结果集
-	
 	public String getCode() {
 		return code;
 	}
@@ -24,7 +23,6 @@ public class ResultInfo {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
 	public int getTotal() {
 		return total;
 	}
@@ -37,7 +35,6 @@ public class ResultInfo {
 	public void setResult(Object result) {
 		this.result = result;
 	}
-	
 	
 
 }
