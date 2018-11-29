@@ -3,6 +3,7 @@ package com.techwells.blue.domain;
 import io.swagger.annotations.ApiModel;
 
 import java.util.Date;
+import java.util.List;
 
 @ApiModel(value="模块的实体类")
 public class Module {
@@ -23,6 +24,8 @@ public class Module {
     private Integer lowScoreMax;
 
     private Integer lowScoreMin;
+    
+    private Integer questionNum;
 
     private Integer activated;
 
@@ -31,12 +34,35 @@ public class Module {
     private Date createdDate;
 
     private Date updatedDate;
+    
+    private List<Industry> industries;  //行业
+    
+	public List<Industry> getIndustries() {
+		return industries;
+	}
 
-    public Integer getModuleId() {
+
+	public void setIndustries(List<Industry> industries) {
+		this.industries = industries;
+	}
+
+
+	public Integer getModuleId() {
         return moduleId;
     }
 
-    public void setModuleId(Integer moduleId) {
+
+	public Integer getQuestionNum() {
+		return questionNum;
+	}
+
+
+	public void setQuestionNum(Integer questionNum) {
+		this.questionNum = questionNum;
+	}
+
+
+	public void setModuleId(Integer moduleId) {
         this.moduleId = moduleId;
     }
 

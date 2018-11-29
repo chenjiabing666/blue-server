@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Module" >
     <id column="module_id" property="moduleId" jdbcType="INTEGER" />
     <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="question_num" property="questionNum" jdbcType="INTEGER" />
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="high_score_max" property="highScoreMax" jdbcType="INTEGER" />
     <result column="high_score_min" property="highScoreMin" jdbcType="INTEGER" />
@@ -17,9 +18,9 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    module_id, module_name, description, high_score_max, high_score_min, medium_score_max, 
-    medium_score_min, low_score_max, low_score_min, activated, deleted, created_date, 
-    updated_date
+    module_id, module_name, question_num, description, high_score_max, high_score_min, 
+    medium_score_max, medium_score_min, low_score_max, low_score_min, activated, deleted, 
+    created_date, updated_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,16 +36,16 @@
     <selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_module (module_name, description, high_score_max, 
-      high_score_min, medium_score_max, medium_score_min, 
-      low_score_max, low_score_min, activated, 
-      deleted, created_date, updated_date
-      )
-    values (#{moduleName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{highScoreMax,jdbcType=INTEGER}, 
-      #{highScoreMin,jdbcType=INTEGER}, #{mediumScoreMax,jdbcType=INTEGER}, #{mediumScoreMin,jdbcType=INTEGER}, 
-      #{lowScoreMax,jdbcType=INTEGER}, #{lowScoreMin,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, 
-      #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
-      )
+    insert into t_module (module_name, question_num, description, 
+      high_score_max, high_score_min, medium_score_max, 
+      medium_score_min, low_score_max, low_score_min, 
+      activated, deleted, created_date, 
+      updated_date)
+    values (#{moduleName,jdbcType=VARCHAR}, #{questionNum,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{highScoreMax,jdbcType=INTEGER}, #{highScoreMin,jdbcType=INTEGER}, #{mediumScoreMax,jdbcType=INTEGER}, 
+      #{mediumScoreMin,jdbcType=INTEGER}, #{lowScoreMax,jdbcType=INTEGER}, #{lowScoreMin,jdbcType=INTEGER}, 
+      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{updatedDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.techwells.blue.domain.Module" >
     <selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="AFTER" >
@@ -54,6 +55,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="moduleName != null" >
         module_name,
+      </if>
+      <if test="questionNum != null" >
+        question_num,
       </if>
       <if test="description != null" >
         description,
@@ -92,6 +96,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="moduleName != null" >
         #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="questionNum != null" >
+        #{questionNum,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
@@ -134,6 +141,9 @@
       <if test="moduleName != null" >
         module_name = #{moduleName,jdbcType=VARCHAR},
       </if>
+      <if test="questionNum != null" >
+        question_num = #{questionNum,jdbcType=INTEGER},
+      </if>
       <if test="description != null" >
         description = #{description,jdbcType=VARCHAR},
       </if>
@@ -173,6 +183,7 @@
   <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Module" >
     update t_module
     set module_name = #{moduleName,jdbcType=VARCHAR},
+      question_num = #{questionNum,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR},
       high_score_max = #{highScoreMax,jdbcType=INTEGER},
       high_score_min = #{highScoreMin,jdbcType=INTEGER},
@@ -186,4 +197,20 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where module_id = #{moduleId,jdbcType=INTEGER}
   </update>
+  
+  <!-- 
+  	List<Module> selectModuleList(PagingTool pagingTool);
+   -->
+  <select id="selectModuleList" resultMap="BaseResultMap" parameterType="com.techwells.blue.util.PagingTool">
+  	select * from t_module limit #{startNum},#{pageSize}
+  </select>
+  
+  <!-- 
+  	int countTotalModuleList(PagingTool pagingTool);
+   -->
+  <select id="countTotalModuleList" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool">
+  	select count(*) from t_module 
+  </select>
+  
+  
 </mapper>

@@ -12,7 +12,7 @@ public class PagingTool {
 	private Map<String, Object> params = new HashMap<String, Object>();   //封装过滤条件
 	
 	//默认的构造方法
-	public PagingTool() {
+	private PagingTool() {
 
 	}
 	

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,21 +46,85 @@ public class ModuleController {
 	@PostMapping("/module/addModule")
 	@ApiOperation(value="添加模块",response=Module.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "moduleName", dataType="String", required = true, value = "模块的moduleName", defaultValue = "Tom"),
+		@ApiImplicitParam(paramType = "query", name = "moduleName", dataType="String", required = true, value = "模块的名称"),
+		@ApiImplicitParam(paramType = "query", name = "description", dataType="String", required = true, value = "模块描述"),
+		@ApiImplicitParam(paramType = "query", name = "highScoreMax", dataType="String", required = true, value = "高分的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "highScoreMin", dataType="String", required = true, value = "高分的最低分"),
+		@ApiImplicitParam(paramType = "query", name = "mediumScoreMax", dataType="String", required = true, value = "中等的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "mediumScoreMin", dataType="String", required = true, value = "中等的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "lowScoreMax", dataType="String", required = true, value = "低分的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "lowScoreMin", dataType="String", required = true, value = "低分的最低分"),
 	})
 	public Object addModule(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
-		String moduleName=request.getParameter("moduleName");
+		String moduleName=request.getParameter("moduleName");  //模块名称
+		String description=request.getParameter("description"); //模块描述
+		String highScoreMax=request.getParameter("highScoreMax"); //高分的最高分
+		String highScoreMin=request.getParameter("highScoreMin"); //高分的最低分
+		String mediumScoreMax=request.getParameter("mediumScoreMax"); //中等的最高分
+		String mediumScoreMin=request.getParameter("mediumScoreMin"); //中等的最高分
+		String lowScoreMax=request.getParameter("lowScoreMax"); //低分的最高分
+		String lowScoreMin=request.getParameter("lowScoreMin"); //低分的最低分
 		
 		if (StringUtils.isEmpty(moduleName)) {
 			resultInfo.setCode("-1");
-			resultInfo.setMessage("moduleName不能为空");
+			resultInfo.setMessage("模块名称不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(description)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("模块描述不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(highScoreMax)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("高分的最高分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(highScoreMin)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("高分的最低分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(mediumScoreMax)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("中等的最高分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(mediumScoreMin)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("中等的最低分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(lowScoreMax)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("低分的最高分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(lowScoreMin)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("低分的最低分不能为空");
 			return resultInfo;
 		}
 		
 		//封装数据
 		Module module=new Module();
 		module.setModuleName(moduleName);
+		module.setCreatedDate(new Date());
+		module.setHighScoreMax(Integer.parseInt(highScoreMax));
+		module.setDescription(description);
+		module.setHighScoreMin(Integer.parseInt(highScoreMin));
+		module.setMediumScoreMax(Integer.parseInt(mediumScoreMax));
+		module.setMediumScoreMin(Integer.parseInt(mediumScoreMin));
+		module.setLowScoreMax(Integer.parseInt(lowScoreMax));
+		module.setLowScoreMin(Integer.parseInt(lowScoreMin));
 		
 		//调用service层的方法
 		try {
@@ -74,7 +139,6 @@ public class ModuleController {
 	}
 	
 	
-	
 	/**
 	 * 获取模块详情
 	 * @param request
@@ -87,7 +151,7 @@ public class ModuleController {
 	})
 	public Object getModuleById(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
-		String moduleId=request.getParameter("moduleId");
+		String moduleId=request.getParameter("moduleId");  //模块Id
 		
 		if (StringUtils.isEmpty(moduleId)) {
 			resultInfo.setCode("-1");
@@ -116,11 +180,27 @@ public class ModuleController {
 	@PostMapping("/module/modifyModule")
 	@ApiOperation(value="修改模块",response=Module.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "moduleId", dataType="int", required = true, value = "模块的moduleId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "moduleId", dataType="int", required = true, value = "模块的Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "moduleName", dataType="String", required = true, value = "模块的名称"),
+		@ApiImplicitParam(paramType = "query", name = "description", dataType="String", required = true, value = "模块描述"),
+		@ApiImplicitParam(paramType = "query", name = "highScoreMax", dataType="String", required = true, value = "高分的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "highScoreMin", dataType="String", required = true, value = "高分的最低分"),
+		@ApiImplicitParam(paramType = "query", name = "mediumScoreMax", dataType="String", required = true, value = "中等的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "mediumScoreMin", dataType="String", required = true, value = "中等的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "lowScoreMax", dataType="String", required = true, value = "低分的最高分"),
+		@ApiImplicitParam(paramType = "query", name = "lowScoreMin", dataType="String", required = true, value = "低分的最低分"),
 	})
 	public Object modifyModule(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
-		String moduleId=request.getParameter("moduleId");
+		String moduleId=request.getParameter("moduleId");  //模块Id
+		String moduleName=request.getParameter("moduleName");  //模块名称
+		String description=request.getParameter("description"); //模块描述
+		String highScoreMax=request.getParameter("highScoreMax"); //高分的最高分
+		String highScoreMin=request.getParameter("highScoreMin"); //高分的最低分
+		String mediumScoreMax=request.getParameter("mediumScoreMax"); //中等的最高分
+		String mediumScoreMin=request.getParameter("mediumScoreMin"); //中等的最高分
+		String lowScoreMax=request.getParameter("lowScoreMax"); //低分的最高分
+		String lowScoreMin=request.getParameter("lowScoreMin"); //低分的最低分
 		
 		if (StringUtils.isEmpty(moduleId)) {
 			resultInfo.setCode("-1");
@@ -128,9 +208,66 @@ public class ModuleController {
 			return resultInfo;
 		}
 		
+		if (StringUtils.isEmpty(moduleName)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("模块名称不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(description)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("模块描述不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(highScoreMax)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("高分的最高分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(highScoreMin)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("高分的最低分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(mediumScoreMax)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("中等的最高分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(mediumScoreMin)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("中等的最低分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(lowScoreMax)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("低分的最高分不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(lowScoreMin)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("低分的最低分不能为空");
+			return resultInfo;
+		}
+		
 		//封装数据
 		Module module=new Module();
 		module.setModuleId(Integer.parseInt(moduleId));
+		module.setModuleName(moduleName);
+		module.setCreatedDate(new Date());
+		module.setHighScoreMax(Integer.parseInt(highScoreMax));
+		module.setDescription(description);
+		module.setHighScoreMin(Integer.parseInt(highScoreMin));
+		module.setMediumScoreMax(Integer.parseInt(mediumScoreMax));
+		module.setMediumScoreMin(Integer.parseInt(mediumScoreMin));
+		module.setLowScoreMax(Integer.parseInt(lowScoreMax));
+		module.setLowScoreMin(Integer.parseInt(lowScoreMin));
 		
 		//调用service层的方法
 		try {
@@ -143,8 +280,6 @@ public class ModuleController {
 			return resultInfo;
 		}
 	}
-	
-	
 	
 	/**
 	 * 根据Id删除模块

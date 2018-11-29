@@ -106,7 +106,6 @@ public class ConfigController {
 		}
 	}
 	
-	
 	/**
 	 * 修改系统配置
 	 * @param request
@@ -120,6 +119,11 @@ public class ConfigController {
 	public Object modifyConfig(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
 		String configId=request.getParameter("configId");
+		String companyName=request.getParameter("companyName");  //公司名称
+		String companyPhone=request.getParameter("companyPhone");  //公司电话
+		String companyAddress=request.getParameter("companyAddress");  //公司地址
+		String copyRight=request.getParameter("copyRight");  //版权声明
+		
 		
 		if (StringUtils.isEmpty(configId)) {
 			resultInfo.setCode("-1");
@@ -127,9 +131,37 @@ public class ConfigController {
 			return resultInfo;
 		}
 		
+		if (StringUtils.isEmpty(companyName)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("公司地址不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(companyPhone)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("公司电话不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(companyAddress)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("公司地址不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(copyRight)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("版权不能为空");
+			return resultInfo;
+		}
+		
 		//封装数据
 		Config config=new Config();
 		config.setConfigId(Integer.parseInt(configId));
+		config.setCompanyName(companyName);
+		config.setCompanyAddress(companyAddress);
+		config.setCopyRight(copyRight);
+		config.setCompanyMobile(companyPhone);
 		
 		//调用service层的方法
 		try {
