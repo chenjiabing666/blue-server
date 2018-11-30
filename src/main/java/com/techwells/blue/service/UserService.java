@@ -1,5 +1,7 @@
 package com.techwells.blue.service;
 
+import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.techwells.blue.domain.EnterpriseAuth;
@@ -134,10 +136,11 @@ public interface UserService {
 	/**
 	 * 认证审核通过
 	 * @param authIds  认证Id数组
+	 * @param status 审核状态 1 通过 0 不通过
 	 * @return
 	 * @throws Exception
 	 */
-	Object authExaminPass(String[] authIds)throws Exception;
+	Object authExaminPass(String[] authIds,Integer status)throws Exception;
 
 	/**
 	 * 绑定邮箱
@@ -148,6 +151,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	Object checkEmail(Integer userId, String email, String code)throws Exception;
+
+	/**
+	 * 根据Id数组批量获取用户信息
+	 * @param userIds
+	 * @return
+	 * @throws Exception
+	 */
+	List<User> getUserBatchByIds(String[] userIds)throws Exception;
 	
 	
 	

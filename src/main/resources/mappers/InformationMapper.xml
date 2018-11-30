@@ -262,7 +262,8 @@ WHERE
 		</if>
 		
 		<if test="params.payType!=null">
-			and i.pay_type=#{params.payType}
+			<!-- and i.pay_type like "%"#{params.payType}"%" -->
+			and LOCATE(#{params.payType},i.pay_type)
 		</if>
 		
 		<if test="params.type!=null">
@@ -287,7 +288,7 @@ WHERE
 		</if>
 		
 		<if test="params.payType!=null">
-			and i.pay_type=#{params.payType}
+			and LOCATE(#{params.payType},i.pay_type)
 		</if>
 		
 		<if test="params.type!=null">

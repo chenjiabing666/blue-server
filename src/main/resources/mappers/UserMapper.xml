@@ -394,5 +394,20 @@ WHERE
 </select>
   
   
+<!-- 
+	List<User> selectUserBatchByIds(@Param("ids")String[] ids);
+ -->
+<select id="selectUserBatchByIds" resultMap="BaseResultMap">
+	SELECT
+	*
+FROM
+	t_user
+where user_id in 
+<foreach collection="ids" item="id" open="(" separator="," close=")">
+	#{id}
+</foreach>
+
+</select>
+  
   
 </mapper>

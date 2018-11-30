@@ -5,23 +5,34 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.Session;
 import javax.naming.spi.DirStateFactory.Result;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +50,7 @@ import com.techwells.blue.domain.rs.UserRecommendVos;
 import com.techwells.blue.service.UserService;
 import com.techwells.blue.util.PagingTool;
 import com.techwells.blue.util.ResultInfo;
+import com.techwells.blue.util.DateUtil;
 
 /**
  * 用户的controller
@@ -837,7 +849,6 @@ public class UserController {
 		}
 	}
 	
-	
 	/**
 	 * 发送链接到指定的邮箱
 	 * @param request
@@ -1196,6 +1207,7 @@ public class UserController {
 		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="Interger", required = true, value = "每页显示的数量", defaultValue = "10"),
 		@ApiImplicitParam(paramType = "query", name = "company", dataType="String", required = false, value = "公司名称,可选", defaultValue = "泰闻信息科技有限公司"),
 		@ApiImplicitParam(paramType = "query", name = "mobile", dataType="String", required = false, value = "用户账号", defaultValue = "18796327106"),
+		@ApiImplicitParam(paramType = "query", name = "status", dataType="int", required = true, value = "审核状态 1 通过 0 未通过", defaultValue = "1"),
 	})
 	public Object getAuthListBack(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
@@ -1204,6 +1216,7 @@ public class UserController {
 		
 		String mobile=request.getParameter("mobile");  //用户账号
 		String company=request.getParameter("company"); //公司名称
+		String status=request.getParameter("status");  //审核状态 1 通过 0 未通过
 		
 		//校验数据
 		if (StringUtils.isEmpty(pageNum)) {
@@ -1230,6 +1243,10 @@ public class UserController {
 		
 		if (!StringUtils.isEmpty(mobile)) {
 			params.put("mobile", mobile);
+		}
+		
+		if (!StringUtils.isEmpty(status)) {
+			params.put("status", Integer.parseInt(status));
 		}
 		pagingTool.setParams(params);
 		
@@ -1279,17 +1296,18 @@ public class UserController {
 
 	
 	/**
-	 * 认证批量审核通过（后台）
+	 * 认证批量审核（后台）
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/user/authExaminPass")
-	@ApiOperation(value="认证批量审核通过（后台）",response=ResultInfo.class,hidden=true)
+	@PostMapping("/user/authExamin")
+	@ApiOperation(value="认证批量审核（后台）",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
-//		@ApiImplicitParam(paramType = "query", name = "authIds", dataType="int", required = true, value = "认证Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "status", dataType="int", required = true, value = "审核状态 1 通过 0 未通过", defaultValue = "1"),
 	})
-	public Object authExaminPass(HttpServletRequest request,String[] authIds){
+	public Object authExamin(HttpServletRequest request,String[] authIds){
 		ResultInfo resultInfo=new ResultInfo();
+		String status=request.getParameter("status");  //审核状态 1 通过 0 未通过
 		
 		if (authIds==null||authIds.length==0) {
 			resultInfo.setCode("-1");
@@ -1297,8 +1315,15 @@ public class UserController {
 			return resultInfo;
 		}
 		
+		if (StringUtils.isEmpty(status)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("审核状态不能为空");
+			return resultInfo;
+		}
+		
+		
 		try {
-			Object object=userService.authExaminPass(authIds);
+			Object object=userService.authExaminPass(authIds,Integer.parseInt(status));
 			return object;
 		} catch (Exception e) {
 			logger.error("认证审核通过异常");
@@ -1309,6 +1334,106 @@ public class UserController {
 		
 	}
 	
+	/**
+	 * 导出用户信息到excel中 传入的参数为：　userIds : 用户ID的数组
+	 */
+	@RequestMapping("/user/exportExcel")
+	@ApiOperation(value="导出用户信息到excel（后台）",response=ResultInfo.class,hidden=true)
+	@ApiImplicitParams({
+//		@ApiImplicitParam(paramType = "query", name = "authIds", dataType="int", required = true, value = "认证Id", defaultValue = "1"),
+	})
+	public byte[] exportExcel(HttpServletRequest request, HttpSession session,
+			HttpServletResponse response) {
+		String filename = "用户表.xls"; // 表格的名称
+		String[] userIds = request.getParameterValues("userIds"); // 获取用户Id
+		if (userIds == null || userIds.length == 0) {
+			return "100001,用户ID不能为空".getBytes();
+		}
+
+		List<User> users = null;
+
+		try {
+			users = userService.getUserBatchByIds(userIds);
+		} catch (Exception e) {
+			return "100002,获取用户信息异常".getBytes();
+		}
+		
+		try {
+			// 转换编码格式为iso-8859-1
+			filename = URLEncoder.encode(filename, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			return "100003,编码转换异常".getBytes();
+		}
+		// 设置响应头 contentType,这里是下载excel
+		response.setContentType("application/x-xls");
+		// 设置响应头Content-Disposition
+		response.setHeader("Content-Disposition", "attachment;filename=\""
+				+ filename + "\"");
+		String[] titles = { "用户ID", "用户手机", "用户名称",  "注册日期", "用户类型","积分"};
+		try {
+			return createExcel(users, titles);
+		} catch (IOException e) {
+			return "100006,文件下载失败.....".getBytes();
+		}
+	}
+
+	/**
+	 * 创建excel表格
+	 * 
+	 * @param lists
+	 *            用户的对象的List
+	 * @param titles
+	 *            表头
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] createExcel(List<User> lists, String[] titles)
+			throws IOException {
+		HSSFWorkbook workbook = new HSSFWorkbook(); // 创建一个工作簿
+
+		HSSFSheet sheet = workbook.createSheet("会员表"); // 在工作簿中创建一个工作表
+
+		HSSFRow row = sheet.createRow(0); // 创建行 行号从0开始 第一行
+		// 创建表头
+		for (int i = 0; i < titles.length; i++) {
+			HSSFCell cell = row.createCell(i); // 在行中创建单元格，从0开始，一行中包括多个单元格
+			cell.setCellValue(titles[i]);
+		}
+
+		int count = 1; // 标记行数
+		for (User user : lists) {
+			HSSFRow rowCount = sheet.createRow(count); // 创建行 行号从0开始 第一行
+
+			HSSFCell cell_0 = rowCount.createCell(0);
+			cell_0.setCellValue(user.getUserId());
+			
+			HSSFCell cell_1 = rowCount.createCell(1);
+			cell_1.setCellValue(user.getMobile());
+
+			HSSFCell cell_2 = rowCount.createCell(2);
+			cell_2.setCellValue(user.getNickName());
+
+			HSSFCell cell_4 = rowCount.createCell(3);
+			cell_4.setCellValue(DateUtil.getDateForFormat(user.getCreatedDate()));
+
+			HSSFCell cell_5 = rowCount.createCell(4);
+			if (user.getUserType() == 1) {
+				cell_5.setCellValue("普通会员");
+			} else if (user.getUserType() == 2) {
+				cell_5.setCellValue("企业用户");
+			}else if (user.getUserType() == 3) {
+				cell_5.setCellValue("Vip用户");
+			}
+			
+			HSSFCell cell_6 = rowCount.createCell(5);
+			cell_6.setCellValue(user.getPoint());
+			count++;
+		}
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		workbook.write(outputStream); // 写入ByteOutputStream流中
+		outputStream.close();
+		return outputStream.toByteArray();
+	}
 	
 	
 	

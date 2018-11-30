@@ -8,6 +8,7 @@ import javax.naming.spi.DirStateFactory.Result;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.techwells.blue.annotation.PrintLog;
 import com.techwells.blue.dao.EnterpriseAuthMapper;
 import com.techwells.blue.dao.UserMapper;
@@ -250,7 +251,7 @@ public class UserServiceImpl implements UserService{
 
 	@PrintLog  //输出异常信息到日志文件中
 	@Override
-	public Object authExaminPass(String[] authIds) throws Exception {
+	public Object authExaminPass(String[] authIds,Integer status) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
 		
 		//审核通过
@@ -260,20 +261,37 @@ public class UserServiceImpl implements UserService{
 			if (auth==null) {
 				continue;  //直接继续
 			}
-			auth.setStatus(1);  //审核通过
+			
+			//判断审核通过还是不通过
+			if (status.equals(1)) { //如果是审核通过
+				auth.setStatus(1);  //审核通过
+				
+				//更新用户的状态为企业用户
+				User user=new User();
+				user.setUserId(auth.getUserId());
+				user.setUserType(2);  //企业用户
+				int count1=userMapper.updateByPrimaryKeySelective(user);
+				if (count1==0) {
+					throw new RuntimeException();  //直接抛出异常回滚数据
+				}
+			}else if(status.equals(0)) {  //审核不通过
+				auth.setStatus(0);  //审核不通过
+				
+				//更新用户的状态为普通用户
+				User user=new User();
+				user.setUserId(auth.getUserId());
+				user.setUserType(1);  //企业用户
+				int count1=userMapper.updateByPrimaryKeySelective(user);
+				if (count1==0) {
+					throw new RuntimeException();  //直接抛出异常回滚数据
+				}
+			}
+			
 			int count=authMapper.updateByPrimaryKeySelective(auth);
 			if (count==0) {
 				throw new RuntimeException();  //直接抛出异常回滚数据
 			}
 			
-			//更新用户的状态为企业用户
-			User user=new User();
-			user.setUserId(auth.getUserId());
-			user.setUserType(2);  //企业用户
-			int count1=userMapper.updateByPrimaryKeySelective(user);
-			if (count1==0) {
-				throw new RuntimeException();  //直接抛出异常回滚数据
-			}
 		}
 		resultInfo.setMessage("操作成功");
 		return resultInfo;
@@ -309,6 +327,12 @@ public class UserServiceImpl implements UserService{
 		}
 		resultInfo.setMessage("绑定成功");
 		return resultInfo;
+	}
+
+	@PrintLog  //输出异常信息到日志文件中
+	@Override
+	public List<User> getUserBatchByIds(String[] userIds) throws Exception {
+		return userMapper.selectUserBatchByIds(userIds);
 	}
 	
 }

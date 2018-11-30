@@ -22,7 +22,6 @@ public class UploadFileUtils {
 	 */
 	public static String uploadFile(String childFolder,String fileName,MultipartFile file)throws Exception{
 		String filePath=BlueConstants.UPLOAD_PATH+childFolder+"/";
-//		String filePath=ApplicationMarketConstants.UPLOAD_PATH+childFolder+"\\";  
 		File targetFile=new File(filePath,fileName);
 		String fileUrl=BlueConstants.UPLOAD_URL+childFolder+"/"+fileName;
 		//如果文件夹不存在，那么新建一个

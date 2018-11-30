@@ -1,62 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.techwells.blue.dao.SolutionMapper" >
-  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Solution" >
-    <id column="solution_id" property="solutionId" jdbcType="INTEGER" />
-    <result column="industry_id" property="industryId" jdbcType="INTEGER" />
-    <result column="type" property="type" jdbcType="INTEGER" />
+<mapper namespace="com.techwells.blue.dao.AnswerMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Answer" >
+    <id column="answer_id" property="answerId" jdbcType="INTEGER" />
+    <result column="question_id" property="questionId" jdbcType="INTEGER" />
+    <result column="answer" property="answer" jdbcType="INTEGER" />
+    <result column="scroe_level" property="scroeLevel" jdbcType="INTEGER" />
     <result column="question_reason" property="questionReason" jdbcType="VARCHAR" />
     <result column="question_reason_url" property="questionReasonUrl" jdbcType="VARCHAR" />
     <result column="advise" property="advise" jdbcType="VARCHAR" />
     <result column="advise_url" property="adviseUrl" jdbcType="VARCHAR" />
     <result column="analysis" property="analysis" jdbcType="VARCHAR" />
     <result column="analysis_url" property="analysisUrl" jdbcType="VARCHAR" />
-    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
     <result column="activated" property="activated" jdbcType="INTEGER" />
     <result column="deleted" property="deleted" jdbcType="INTEGER" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    solution_id, industry_id, type, question_reason, question_reason_url, advise, advise_url, 
-    analysis, analysis_url, module_id, activated, deleted, updated_date, created_date
+    answer_id, question_id, answer, scroe_level, question_reason, question_reason_url, 
+    advise, advise_url, analysis, analysis_url, status, activated, deleted, updated_date, 
+    created_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_solution
-    where solution_id = #{solutionId,jdbcType=INTEGER}
+    from t_answer
+    where answer_id = #{answerId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_solution
-    where solution_id = #{solutionId,jdbcType=INTEGER}
+    delete from t_answer
+    where answer_id = #{answerId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.techwells.blue.domain.Solution" >
-    <selectKey resultType="java.lang.Integer" keyProperty="solutionId" order="AFTER" >
+  <insert id="insert" parameterType="com.techwells.blue.domain.Answer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="answerId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_solution (industry_id, type, question_reason, 
-      question_reason_url, advise, advise_url, 
-      analysis, analysis_url, module_id, 
-      activated, deleted, updated_date, 
-      created_date)
-    values (#{industryId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{questionReason,jdbcType=VARCHAR}, 
-      #{questionReasonUrl,jdbcType=VARCHAR}, #{advise,jdbcType=VARCHAR}, #{adviseUrl,jdbcType=VARCHAR}, 
-      #{analysis,jdbcType=VARCHAR}, #{analysisUrl,jdbcType=VARCHAR}, #{moduleId,jdbcType=INTEGER}, 
-      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{updatedDate,jdbcType=TIMESTAMP}, 
-      #{createdDate,jdbcType=TIMESTAMP})
+    insert into t_answer (question_id, answer, scroe_level, 
+      question_reason, question_reason_url, advise, 
+      advise_url, analysis, analysis_url, 
+      status, activated, deleted, 
+      updated_date, created_date)
+    values (#{questionId,jdbcType=INTEGER}, #{answer,jdbcType=INTEGER}, #{scroeLevel,jdbcType=INTEGER}, 
+      #{questionReason,jdbcType=VARCHAR}, #{questionReasonUrl,jdbcType=VARCHAR}, #{advise,jdbcType=VARCHAR}, 
+      #{adviseUrl,jdbcType=VARCHAR}, #{analysis,jdbcType=VARCHAR}, #{analysisUrl,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, 
+      #{updatedDate,jdbcType=TIMESTAMP}, #{createdDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Solution" >
-    <selectKey resultType="java.lang.Integer" keyProperty="solutionId" order="AFTER" >
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Answer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="answerId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_solution
+    insert into t_answer
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="industryId != null" >
-        industry_id,
+      <if test="questionId != null" >
+        question_id,
       </if>
-      <if test="type != null" >
-        type,
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="scroeLevel != null" >
+        scroe_level,
       </if>
       <if test="questionReason != null" >
         question_reason,
@@ -76,8 +81,8 @@
       <if test="analysisUrl != null" >
         analysis_url,
       </if>
-      <if test="moduleId != null" >
-        module_id,
+      <if test="status != null" >
+        status,
       </if>
       <if test="activated != null" >
         activated,
@@ -93,11 +98,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="industryId != null" >
-        #{industryId,jdbcType=INTEGER},
+      <if test="questionId != null" >
+        #{questionId,jdbcType=INTEGER},
       </if>
-      <if test="type != null" >
-        #{type,jdbcType=INTEGER},
+      <if test="answer != null" >
+        #{answer,jdbcType=INTEGER},
+      </if>
+      <if test="scroeLevel != null" >
+        #{scroeLevel,jdbcType=INTEGER},
       </if>
       <if test="questionReason != null" >
         #{questionReason,jdbcType=VARCHAR},
@@ -117,8 +125,8 @@
       <if test="analysisUrl != null" >
         #{analysisUrl,jdbcType=VARCHAR},
       </if>
-      <if test="moduleId != null" >
-        #{moduleId,jdbcType=INTEGER},
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="activated != null" >
         #{activated,jdbcType=INTEGER},
@@ -134,14 +142,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Solution" >
-    update t_solution
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Answer" >
+    update t_answer
     <set >
-      <if test="industryId != null" >
-        industry_id = #{industryId,jdbcType=INTEGER},
+      <if test="questionId != null" >
+        question_id = #{questionId,jdbcType=INTEGER},
       </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=INTEGER},
+      </if>
+      <if test="scroeLevel != null" >
+        scroe_level = #{scroeLevel,jdbcType=INTEGER},
       </if>
       <if test="questionReason != null" >
         question_reason = #{questionReason,jdbcType=VARCHAR},
@@ -161,8 +172,8 @@
       <if test="analysisUrl != null" >
         analysis_url = #{analysisUrl,jdbcType=VARCHAR},
       </if>
-      <if test="moduleId != null" >
-        module_id = #{moduleId,jdbcType=INTEGER},
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="activated != null" >
         activated = #{activated,jdbcType=INTEGER},
@@ -177,23 +188,24 @@
         created_date = #{createdDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where solution_id = #{solutionId,jdbcType=INTEGER}
+    where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Solution" >
-    update t_solution
-    set industry_id = #{industryId,jdbcType=INTEGER},
-      type = #{type,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Answer" >
+    update t_answer
+    set question_id = #{questionId,jdbcType=INTEGER},
+      answer = #{answer,jdbcType=INTEGER},
+      scroe_level = #{scroeLevel,jdbcType=INTEGER},
       question_reason = #{questionReason,jdbcType=VARCHAR},
       question_reason_url = #{questionReasonUrl,jdbcType=VARCHAR},
       advise = #{advise,jdbcType=VARCHAR},
       advise_url = #{adviseUrl,jdbcType=VARCHAR},
       analysis = #{analysis,jdbcType=VARCHAR},
       analysis_url = #{analysisUrl,jdbcType=VARCHAR},
-      module_id = #{moduleId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
       activated = #{activated,jdbcType=INTEGER},
       deleted = #{deleted,jdbcType=INTEGER},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       created_date = #{createdDate,jdbcType=TIMESTAMP}
-    where solution_id = #{solutionId,jdbcType=INTEGER}
+    where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
 </mapper>

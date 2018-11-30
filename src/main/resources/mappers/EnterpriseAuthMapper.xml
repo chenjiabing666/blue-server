@@ -168,6 +168,11 @@ FROM
 		<if test="params.mobile!=null">
 			and u.mobile=#{params.mobile}
 		</if>
+		
+		<if test="params.status!=null">
+			and a.status=#{params.status}
+		</if>
+		
 		and u.user_id = a.user_id
 	</where>
 	ORDER BY a.created_date DESC
@@ -191,6 +196,11 @@ FROM
 		<if test="params.mobile!=null">
 			and u.mobile=#{params.mobile}
 		</if>
+		
+		<if test="params.status!=null">
+			and a.status=#{params.status}
+		</if>
+		
 		and u.user_id = a.user_id
 	</where>
 </select>

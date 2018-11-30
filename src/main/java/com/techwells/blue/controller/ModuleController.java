@@ -138,7 +138,6 @@ public class ModuleController {
 		}
 	}
 	
-	
 	/**
 	 * 获取模块详情
 	 * @param request
@@ -320,7 +319,7 @@ public class ModuleController {
 	 * @return
 	 */
 	@PostMapping("/module/getModuleList")
-	@ApiOperation(value="分页获取模块列表",response=Module.class,hidden=true)
+	@ApiOperation(value="分页获取模块列表",response=Module.class,hidden=false)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
 		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="int", required = true, value = "每页显示的数量", defaultValue = "10"),

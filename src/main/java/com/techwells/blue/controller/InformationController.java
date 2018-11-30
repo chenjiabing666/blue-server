@@ -6,8 +6,10 @@ import io.swagger.annotations.ApiOperation;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -29,6 +31,7 @@ import com.techwells.blue.util.BlueConstants;
 import com.techwells.blue.util.PagingTool;
 import com.techwells.blue.util.ResultInfo;
 import com.techwells.blue.util.UploadFileUtils;
+import com.techwells.blue.util.WangEditorDomin;
 
 /**
  * 资料库的controller
@@ -124,6 +127,14 @@ public class InformationController {
 			}
 		}
 		
+		
+		if (payType.equals("1")&&(payType.equals("2")||payType.equals("3")||payType.equals("4"))) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("付费形式错误");
+			return resultInfo;
+		}
+		
+		
 		//封装数据
 		Information information=new Information();
 		information.setTitle(title);
@@ -131,44 +142,50 @@ public class InformationController {
 		information.setAdminId(Integer.parseInt(adminId));
 		information.setContent(content);
 		information.setCreateTime(new Date());
-		information.setPrice(new BigDecimal(price));  //价格
-		information.setPoint(Integer.parseInt(point));  //积分
+		
+		if (!StringUtils.isEmpty(price)) {
+			information.setPrice(new BigDecimal(price));  //价格
+		}
+		
+		if (!StringUtils.isEmpty(point)) {
+			information.setPoint(Integer.parseInt(point));  //积分
+		}
+		
 		information.setType(Integer.parseInt(type));
 		information.setModuleId(Integer.parseInt(moduleId)); 
 		
-		//如果是文字资料，那么文件不能为空
-		if (type.equals("2")) { 
-			if (file==null) {
-				resultInfo.setCode("-1");
-				resultInfo.setMessage("文件不能为空");
-				return resultInfo;
-			}
-			
-			//上传文件
-			String fileName=System.currentTimeMillis()+file.getOriginalFilename();
-			String path=BlueConstants.UPLOAD_PATH+"info-file/";  //文件存放的路径
-			String fileUrl=BlueConstants.UPLOAD_URL+"info-file/"+fileName;
-			File targetFile=new File(path,fileName);
-			
-			try {
-				UploadFileUtils.createChildFolder(targetFile);
-			} catch (Exception e) {
-				logger.error("创建子文件夹异常",e);
-				resultInfo.setCode("-1");
-				resultInfo.setMessage("创建子文件夹异常");
-				return resultInfo;
-			}
-			
-			try {
-				file.transferTo(targetFile);
-			} catch (Exception e) {
-				logger.error("上传文件异常",e);
-				resultInfo.setCode("-1");
-				resultInfo.setMessage("上传文件异常");
-				return resultInfo;
-			}
-			information.setFileUrl(fileUrl);
+		//如果是文件资料，那么文件不能为空
+		if (file == null && type.equals("2")) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("文件不能为空");
+			return resultInfo;
 		}
+
+		// 上传文件
+		String fileName = System.currentTimeMillis()
+				+ file.getOriginalFilename();
+		String path = BlueConstants.UPLOAD_PATH + "info-file/"; // 文件存放的路径
+		String fileUrl = BlueConstants.UPLOAD_URL + "info-file/" + fileName;
+		File targetFile = new File(path, fileName);
+
+		try {
+			UploadFileUtils.createChildFolder(targetFile);
+		} catch (Exception e) {
+			logger.error("创建子文件夹异常", e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("创建子文件夹异常");
+			return resultInfo;
+		}
+
+		try {
+			file.transferTo(targetFile);
+		} catch (Exception e) {
+			logger.error("上传文件异常", e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("上传文件异常");
+			return resultInfo;
+		}
+		information.setFileUrl(fileUrl);
 		
 		
 		
@@ -226,9 +243,16 @@ public class InformationController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "informationId", dataType="int", required = true, value = "资料库的informationId", defaultValue = "1"),
 	})
-	public Object modifyInformation(HttpServletRequest request){
+	public Object modifyInformation(HttpServletRequest request,@RequestParam(value="file",required=false)MultipartFile file){
 		ResultInfo resultInfo=new ResultInfo();
-		String informationId=request.getParameter("informationId");
+		String informationId=request.getParameter("informationId");  //资料Id
+		String title=request.getParameter("title");  //标题 18字以内
+		String payType=request.getParameter("payType");  //付款形式 1免费2企业3会员4付费(可多选) ，用逗号分割
+		String price=request.getParameter("price");  //价格  可选
+		String point=request.getParameter("point");  //积分 可选
+		String type=request.getParameter("type");    //分类  1:图片视频库 2：文字资料库
+		String content=request.getParameter("content");  //内容 富文本的形式
+		String moduleId=request.getParameter("moduleId"); //模块Id
 		
 		if (StringUtils.isEmpty(informationId)) {
 			resultInfo.setCode("-1");
@@ -236,9 +260,110 @@ public class InformationController {
 			return resultInfo;
 		}
 		
+		if (StringUtils.isEmpty(title)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("标题不能为空");
+			return resultInfo;
+		}
+		
+		if (title.length()>18) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("标题必须在18字以内");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(payType)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("付费形式不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(type)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("分类不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(content)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("内容不能为空");
+			return resultInfo;
+		}
+		
+		
+		if (StringUtils.isEmpty(moduleId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("模块Id不能为空");
+			return resultInfo;
+		}
+		
+		
+		//如果是付费的话，那么价格和积分必须有一项
+		if (payType.contains(String.valueOf(4))) {
+			if (StringUtils.isEmpty(price)&&StringUtils.isEmpty(point)) {
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("请选择付费的形式");
+				return resultInfo;
+			}
+		}
+		
+		
+		if (payType.equals("1")&&(payType.equals("2")||payType.equals("3")||payType.equals("4"))) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("付费形式错误");
+			return resultInfo;
+		}
+		
+		
 		//封装数据
 		Information information=new Information();
 		information.setInformationId(Integer.parseInt(informationId));
+		information.setTitle(title);
+		information.setPayType(payType); 
+		information.setContent(content);
+		information.setCreateTime(new Date());
+		
+		if (!StringUtils.isEmpty(price)) {
+			information.setPrice(new BigDecimal(price));  //价格
+		}
+		
+		if (!StringUtils.isEmpty(point)) {
+			information.setPoint(Integer.parseInt(point));  //积分
+		}
+		
+		information.setType(Integer.parseInt(type));
+		information.setModuleId(Integer.parseInt(moduleId)); 
+		
+		
+		if (file!=null) {
+			// 上传文件
+			String fileName = System.currentTimeMillis()
+					+ file.getOriginalFilename();
+			String path = BlueConstants.UPLOAD_PATH + "info-file/"; // 文件存放的路径
+			String fileUrl = BlueConstants.UPLOAD_URL + "info-file/" + fileName;
+			File targetFile = new File(path, fileName);
+
+			try {
+				UploadFileUtils.createChildFolder(targetFile);
+			} catch (Exception e) {
+				logger.error("创建子文件夹异常", e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("创建子文件夹异常");
+				return resultInfo;
+			}
+
+			try {
+				file.transferTo(targetFile);
+			} catch (Exception e) {
+				logger.error("上传文件异常", e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("上传文件异常");
+				return resultInfo;
+			}
+			information.setFileUrl(fileUrl);
+		}
+
+		
 		
 		//调用service层的方法
 		try {
@@ -423,7 +548,51 @@ public class InformationController {
 	}
 	
 
+	/**
+	 * WangEditor上传图片
+	 * 
+	 * @param files
+	 *            上传的图片文件 这里的@RequestParam("myFile")一定要和前端设置的名字一样，否则将会接受不到
+	 * @param files
+	 * @return
+	 */
+	@ApiOperation(value="WangEditor上传图片",response=Information.class,hidden=true)
+	@ApiImplicitParams({
+//		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
+	})
+	@RequestMapping("/information/uploadImage")
+	public Object uploadImage(@RequestParam("myFile") MultipartFile[] files) {
+		WangEditorDomin wangEditorDomin = new WangEditorDomin(); // 封装结果集
+		List<String> data = new ArrayList<String>(); // 存储图片的url
+		// 遍历图片
+		for (MultipartFile file : files) {
+			String fileName = System.currentTimeMillis()
+					+ file.getOriginalFilename(); // 图片的名字
+			String filepath =BlueConstants.UPLOAD_PATH
+					+ "information-image\\";
+			String imageUrl = BlueConstants.UPLOAD_URL
+					+ "information-image/" + fileName; // 图片的访问路径
+			File targetFile = new File(filepath, fileName); // 文件的路径
 
+			// 如果文件夹不存在，那么创建一个即可
+			if (!targetFile.getParentFile().exists()) {
+				targetFile.getParentFile().mkdirs(); // 递归创建文件夹
+			}
+
+			try {
+				file.transferTo(targetFile); // 保存图片
+				data.add(imageUrl); // 添加url
+//				data.add("http://img3.imgtn.bdimg.com/it/u=3258641584,555286175&fm=26&gp=0.jpg");
+			} catch (Exception e) {
+				wangEditorDomin.setErrno("-1"); // 上传失败
+				return wangEditorDomin;
+			}
+		}
+
+		// 执行到了这里，说明上传成功了，那么返回即可
+		wangEditorDomin.setData(data);
+		return wangEditorDomin;
+	}
 
 
 }

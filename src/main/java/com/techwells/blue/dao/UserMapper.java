@@ -2,6 +2,8 @@ package com.techwells.blue.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.techwells.blue.domain.User;
 import com.techwells.blue.domain.rs.UserRecommendVos;
 import com.techwells.blue.util.PagingTool;
@@ -57,6 +59,12 @@ public interface UserMapper {
      */
     UserRecommendVos selectRecommenUserByUserId(Integer userId);
     
+    /**
+     * 根据数组Id批量获取用户信息
+     * @param ids
+     * @return
+     */
+    List<User> selectUserBatchByIds(@Param("ids")String[] ids);
     
     
     

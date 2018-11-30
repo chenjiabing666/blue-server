@@ -72,8 +72,6 @@ public class SkillController {
 		}
 	}
 	
-	
-	
 	/**
 	 * 获取技能详情
 	 * @param request
