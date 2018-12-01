@@ -1,5 +1,7 @@
 package com.techwells.blue.service;
 
+import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.techwells.blue.domain.Answer;
@@ -19,7 +21,7 @@ public interface QuestionService {
 	 * @return
 	 * @throws Exception
 	 */
-	Object addQuestion(Question question,Answer answer)throws Exception;
+	Object addQuestion(Question question,List<Answer> answerList)throws Exception;
 	
 	/**
 	 * 根据问题Id获取信息
@@ -73,6 +75,14 @@ public interface QuestionService {
 	 * @throws Exception
 	 */
 	Object getQuestionList(PagingTool pagingTool)throws Exception;
+
+	/**
+	 * 修改答案
+	 * @param answer
+	 * @return
+	 * @throws Exception
+	 */
+	Object modifyAnswer(Answer answer)throws Exception;
 	
 	
 	

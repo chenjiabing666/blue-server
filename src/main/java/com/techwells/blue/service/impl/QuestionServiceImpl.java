@@ -31,7 +31,7 @@ public class QuestionServiceImpl implements QuestionService{
 	
 	@PrintLog  //输出异常信息到日志文件中
 	@Override
-	public Object addQuestion(Question question,Answer answer) throws Exception {
+	public Object addQuestion(Question question,List<Answer> answerList) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
 		int count=questionMapper.insertSelective(question);
 		if (count==0) {
@@ -40,12 +40,15 @@ public class QuestionServiceImpl implements QuestionService{
 			return resultInfo;
 		}
 		
-		answer.setQuestionId(question.getQuestionId());
-		
-		int count1=answerMapper.insertSelective(answer);
-		if (count1==0) {
-			throw new RuntimeException();
+		//遍历添加答案
+		for (Answer answer : answerList) {
+			answer.setQuestionId(question.getQuestionId());
+			int count1=answerMapper.insertSelective(answer);
+			if (count1==0) {
+				throw new RuntimeException();
+			}
 		}
+		
 		resultInfo.setMessage("添加成功");
 		return resultInfo;
 	}
@@ -61,6 +64,10 @@ public class QuestionServiceImpl implements QuestionService{
 			resultInfo.setMessage("该问题不存在");
 			return resultInfo;
 		}
+		
+		//根据问题获取答案和解析
+		List<Answer> answers=answerMapper.selectAnswersByQuestionId(questionId);
+		question.setAnswers(answers);
 		resultInfo.setMessage("获取成功");
 		resultInfo.setResult(question);
 		return resultInfo;
@@ -123,6 +130,22 @@ public class QuestionServiceImpl implements QuestionService{
 		resultInfo.setMessage("获取成功");
 		resultInfo.setTotal(total);
 		resultInfo.setResult(questionModuleVos);
+		return resultInfo;
+	}
+	
+	@PrintLog  //输出异常信息到日志文件中
+	@Override
+	public Object modifyAnswer(Answer answer) throws Exception {
+		ResultInfo resultInfo=new ResultInfo();
+		
+		int count=answerMapper.updateByPrimaryKeySelective(answer);
+		if (count==0) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("修改失败");
+			return resultInfo;
+		}
+		
+		resultInfo.setMessage("修改成功");
 		return resultInfo;
 	}
 

@@ -6,8 +6,16 @@ public class Answer {
     private Integer answerId;
 
     private Integer questionId;
+    private String content;
+    public String getContent() {
+		return content;
+	}
 
-    private Integer answer;
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	private Integer answer;
 
     private Integer scroeLevel;
 

@@ -1,5 +1,7 @@
 package com.techwells.blue.dao;
 
+import java.util.List;
+
 import com.techwells.blue.domain.Answer;
 
 public interface AnswerMapper {
@@ -14,4 +16,12 @@ public interface AnswerMapper {
     int updateByPrimaryKeySelective(Answer record);
 
     int updateByPrimaryKey(Answer record);
+    
+    /**
+     * 根据问题Id获取答案
+     * @param questionId
+     * @return
+     */
+    List<Answer> selectAnswersByQuestionId(Integer questionId);
+    
 }

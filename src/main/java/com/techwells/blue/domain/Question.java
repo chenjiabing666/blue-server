@@ -1,6 +1,7 @@
 package com.techwells.blue.domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class Question {
     private Integer questionId;
@@ -8,6 +9,10 @@ public class Question {
     private Integer moduleId;
 
     private String content;
+
+    private Integer fileType;
+
+    private String file;
 
     private Integer status;
 
@@ -18,8 +23,18 @@ public class Question {
     private Date updatedDate;
 
     private Date createdDate;
+    
+    private List<Answer> answers; //答案
 
-    public Integer getQuestionId() {
+    public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
+
+	public Integer getQuestionId() {
         return questionId;
     }
 
@@ -41,6 +56,22 @@ public class Question {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(Integer fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file == null ? null : file.trim();
     }
 
     public Integer getStatus() {

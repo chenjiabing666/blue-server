@@ -5,6 +5,7 @@
     <id column="answer_id" property="answerId" jdbcType="INTEGER" />
     <result column="question_id" property="questionId" jdbcType="INTEGER" />
     <result column="answer" property="answer" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="scroe_level" property="scroeLevel" jdbcType="INTEGER" />
     <result column="question_reason" property="questionReason" jdbcType="VARCHAR" />
     <result column="question_reason_url" property="questionReasonUrl" jdbcType="VARCHAR" />
@@ -19,7 +20,7 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    answer_id, question_id, answer, scroe_level, question_reason, question_reason_url, 
+    answer_id, question_id, answer, content, scroe_level, question_reason, question_reason_url, 
     advise, advise_url, analysis, analysis_url, status, activated, deleted, updated_date, 
     created_date
   </sql>
@@ -37,16 +38,18 @@
     <selectKey resultType="java.lang.Integer" keyProperty="answerId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_answer (question_id, answer, scroe_level, 
-      question_reason, question_reason_url, advise, 
-      advise_url, analysis, analysis_url, 
-      status, activated, deleted, 
-      updated_date, created_date)
-    values (#{questionId,jdbcType=INTEGER}, #{answer,jdbcType=INTEGER}, #{scroeLevel,jdbcType=INTEGER}, 
-      #{questionReason,jdbcType=VARCHAR}, #{questionReasonUrl,jdbcType=VARCHAR}, #{advise,jdbcType=VARCHAR}, 
-      #{adviseUrl,jdbcType=VARCHAR}, #{analysis,jdbcType=VARCHAR}, #{analysisUrl,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, 
-      #{updatedDate,jdbcType=TIMESTAMP}, #{createdDate,jdbcType=TIMESTAMP})
+    insert into t_answer (question_id, answer, content, 
+      scroe_level, question_reason, question_reason_url, 
+      advise, advise_url, analysis, 
+      analysis_url, status, activated, 
+      deleted, updated_date, created_date
+      )
+    values (#{questionId,jdbcType=INTEGER}, #{answer,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{scroeLevel,jdbcType=INTEGER}, #{questionReason,jdbcType=VARCHAR}, #{questionReasonUrl,jdbcType=VARCHAR}, 
+      #{advise,jdbcType=VARCHAR}, #{adviseUrl,jdbcType=VARCHAR}, #{analysis,jdbcType=VARCHAR}, 
+      #{analysisUrl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=INTEGER}, #{updatedDate,jdbcType=TIMESTAMP}, #{createdDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.techwells.blue.domain.Answer" >
     <selectKey resultType="java.lang.Integer" keyProperty="answerId" order="AFTER" >
@@ -59,6 +62,9 @@
       </if>
       <if test="answer != null" >
         answer,
+      </if>
+      <if test="content != null" >
+        content,
       </if>
       <if test="scroeLevel != null" >
         scroe_level,
@@ -103,6 +109,9 @@
       </if>
       <if test="answer != null" >
         #{answer,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="scroeLevel != null" >
         #{scroeLevel,jdbcType=INTEGER},
@@ -151,6 +160,9 @@
       <if test="answer != null" >
         answer = #{answer,jdbcType=INTEGER},
       </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
       <if test="scroeLevel != null" >
         scroe_level = #{scroeLevel,jdbcType=INTEGER},
       </if>
@@ -194,6 +206,7 @@
     update t_answer
     set question_id = #{questionId,jdbcType=INTEGER},
       answer = #{answer,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
       scroe_level = #{scroeLevel,jdbcType=INTEGER},
       question_reason = #{questionReason,jdbcType=VARCHAR},
       question_reason_url = #{questionReasonUrl,jdbcType=VARCHAR},
@@ -208,4 +221,18 @@
       created_date = #{createdDate,jdbcType=TIMESTAMP}
     where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
+  
+  
+  <!-- 
+  	List<Answer> selectAnswersByQuestionId(Integer questionId);
+   -->
+  <select id="selectAnswersByQuestionId" resultMap="BaseResultMap">
+  	SELECT
+	*
+FROM
+	t_answer
+WHERE
+	question_id = #{questionId}
+  </select>
+  
 </mapper>

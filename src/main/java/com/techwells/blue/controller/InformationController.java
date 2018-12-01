@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.druid.util.StringUtils;
 import com.techwells.blue.domain.Information;
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.rs.AdminInformationVos;
 import com.techwells.blue.service.InformationService;
 import com.techwells.blue.util.BlueConstants;
 import com.techwells.blue.util.PagingTool;
@@ -480,27 +481,29 @@ public class InformationController {
 	
 	/**
 	 * 分页获取资料库列表(前台)
+	 * 需要判断这个用户有没有权限访问付费的文件（免费的除外）
 	 * @param request
 	 * @return
 	 */
 	@PostMapping("/information/getInformationListForeground")
-	@ApiOperation(value="分页获取资料库列表(前台)",response=Information.class,hidden=false)
+	@ApiOperation(value="分页获取资料库列表(前台)",response=AdminInformationVos.class,hidden=false)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
 		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="int", required = true, value = "每页显示的数量", defaultValue = "10"),
 		@ApiImplicitParam(paramType = "query", name = "title", dataType="String", required = false, value = "标题", defaultValue = ""),
 		@ApiImplicitParam(paramType = "query", name = "moduleName", dataType="String", required = false, value = "模块名称", defaultValue = ""),
 		@ApiImplicitParam(paramType = "query", name = "type", dataType="int", required = false, value = "分类  1:图片视频库 2：文字资料库", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id，", defaultValue = ""),
 	})
 	public Object getInformationListForeground(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
-		
 		String pageNum=request.getParameter("pageNum");
 		String pageSize=request.getParameter("pageSize");
 		
 		String title=request.getParameter("title");  //标题
 		String type=request.getParameter("type");   //分类  1:图片视频库 2：文字资料库
 		String moduleName=request.getParameter("moduleName");  //模块名称
+		String userId=request.getParameter("userId");  //用户Id，
 		
 		//校验数据
 		if (StringUtils.isEmpty(pageNum)) {
@@ -515,11 +518,20 @@ public class InformationController {
 			return resultInfo;
 		}
 		
+		if (StringUtils.isEmpty(userId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户Id不能为空");
+			return resultInfo;
+		}
+		
 		//构造分页数据
 		PagingTool pagingTool=new PagingTool(Integer.parseInt(pageNum),Integer.parseInt(pageSize));
 		
 		//封装过滤条件
 		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("userId", Integer.parseInt(userId));  //设置用户id
+		
 		
 		if (!StringUtils.isEmpty(title)) {
 			params.put("title", title);

@@ -5,6 +5,8 @@
     <id column="question_id" property="questionId" jdbcType="INTEGER" />
     <result column="module_id" property="moduleId" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="file_type" property="fileType" jdbcType="INTEGER" />
+    <result column="file" property="file" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="activated" property="activated" jdbcType="INTEGER" />
     <result column="deleted" property="deleted" jdbcType="INTEGER" />
@@ -12,7 +14,8 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    question_id, module_id, content, status, activated, deleted, updated_date, created_date
+    question_id, module_id, content, file_type, file, status, activated, deleted, updated_date, 
+    created_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -28,12 +31,14 @@
     <selectKey resultType="java.lang.Integer" keyProperty="questionId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_question (module_id, content, status, 
-      activated, deleted, updated_date, 
-      created_date)
-    values (#{moduleId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{updatedDate,jdbcType=TIMESTAMP}, 
-      #{createdDate,jdbcType=TIMESTAMP})
+    insert into t_question (module_id, content, file_type, 
+      file, status, activated, 
+      deleted, updated_date, created_date
+      )
+    values (#{moduleId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{fileType,jdbcType=INTEGER}, 
+      #{file,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=INTEGER}, #{updatedDate,jdbcType=TIMESTAMP}, #{createdDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.techwells.blue.domain.Question" >
     <selectKey resultType="java.lang.Integer" keyProperty="questionId" order="AFTER" >
@@ -46,6 +51,12 @@
       </if>
       <if test="content != null" >
         content,
+      </if>
+      <if test="fileType != null" >
+        file_type,
+      </if>
+      <if test="file != null" >
+        file,
       </if>
       <if test="status != null" >
         status,
@@ -69,6 +80,12 @@
       </if>
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=INTEGER},
+      </if>
+      <if test="file != null" >
+        #{file,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
@@ -96,6 +113,12 @@
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
+      <if test="fileType != null" >
+        file_type = #{fileType,jdbcType=INTEGER},
+      </if>
+      <if test="file != null" >
+        file = #{file,jdbcType=VARCHAR},
+      </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
@@ -118,6 +141,8 @@
     update t_question
     set module_id = #{moduleId,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
+      file_type = #{fileType,jdbcType=INTEGER},
+      file = #{file,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       activated = #{activated,jdbcType=INTEGER},
       deleted = #{deleted,jdbcType=INTEGER},
@@ -125,12 +150,14 @@
       created_date = #{createdDate,jdbcType=TIMESTAMP}
     where question_id = #{questionId,jdbcType=INTEGER}
   </update>
-  <!-- 
-  	 List<QuestionModuleVos> selectQuestionList(PagingTool pagingTool);
-   -->
-  <select id="selectQuestionList" resultType="com.techwells.blue.domain.rs.QuestionModuleVos" parameterType="com.techwells.blue.util.PagingTool">
+ 
+ 
+ <!-- 
+ 	List<QuestionModuleVos> selectQuestionList(PagingTool pagingTool);
+  -->
+ <select id="selectQuestionList" resultType="com.techwells.blue.domain.rs.QuestionModuleVos" parameterType="com.techwells.blue.util.PagingTool">
   	SELECT
-	q.*, m.module_name AS moduleName
+	q.*,m.module_name as moduleName
 FROM
 	t_module m,
 	t_question q
@@ -148,9 +175,7 @@ FROM
 		</if>
 		and q.module_id = m.module_id
 	</where>
-	limit #{startNum},#{pageSize}
   </select>
- 
  
  <!-- 
  	    int countTotalQuestionList(PagingTool pagingTool);
