@@ -68,7 +68,7 @@ public class AaaController {
 		} catch (Exception e) {
 			logger.error("添加模板异常",e);
 			resultInfo.setCode("-1");
-			resultInfo.setMessage("异常");
+			resultInfo.setMessage("添加失败");
 			return resultInfo;
 		}
 	}
@@ -102,7 +102,7 @@ public class AaaController {
 		} catch (Exception e) {
 			logger.error("获取模板详细信息失败",e);
 			resultInfo.setCode("-1");
-			resultInfo.setMessage("异常");
+			resultInfo.setMessage("获取失败");
 			return resultInfo;
 		}
 	}
@@ -139,7 +139,7 @@ public class AaaController {
 		} catch (Exception e) {
 			logger.error("修改模板异常",e);
 			resultInfo.setCode("-1");
-			resultInfo.setMessage("异常");
+			resultInfo.setMessage("修改失败");
 			return resultInfo;
 		}
 	}
@@ -173,7 +173,7 @@ public class AaaController {
 		} catch (Exception e) {
 			logger.error("删除模板异常",e);
 			resultInfo.setCode("-1");
-			resultInfo.setMessage("异常");
+			resultInfo.setMessage("删除失败");
 			return resultInfo;
 		}
 	}
@@ -224,7 +224,7 @@ public class AaaController {
 		} catch (Exception e) {
 			logger.error("获取模板列表异常",e);
 			resultInfo.setCode("-1");
-			resultInfo.setMessage("异常");
+			resultInfo.setMessage("获取失败");
 			return resultInfo;
 		}
 	}

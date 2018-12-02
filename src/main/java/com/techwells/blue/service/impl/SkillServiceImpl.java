@@ -24,7 +24,7 @@ public class SkillServiceImpl implements SkillService{
 	@Resource
 	private SkillMapper skillMapper;
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addSkill(Skill skill) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -38,7 +38,7 @@ public class SkillServiceImpl implements SkillService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getSkillById(Integer skillId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -54,7 +54,7 @@ public class SkillServiceImpl implements SkillService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifySkillReturnObject(Skill skill) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -68,13 +68,13 @@ public class SkillServiceImpl implements SkillService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifySkillReturnCount(Skill skill) throws Exception {
 		return skillMapper.updateByPrimaryKeySelective(skill);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteSkillReturnObject(Integer skillId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -89,13 +89,13 @@ public class SkillServiceImpl implements SkillService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteSkillReturnCount(Integer skillId) throws Exception {
 		return skillMapper.deleteByPrimaryKey(skillId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getSkillList(PagingTool pagingTool) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();

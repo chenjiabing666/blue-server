@@ -213,4 +213,18 @@
   </select>
   
   
+  <!-- 
+  	List<Module> selectModuleListByName(String moduleName);
+   -->
+  <select id="selectModuleListByName" resultMap="BaseResultMap">
+	  	SELECT
+		module_name,
+		module_id
+	FROM
+		t_module
+	WHERE
+		module_name LIKE "%"#{moduleName}"%"
+  </select>
+  
+  
 </mapper>

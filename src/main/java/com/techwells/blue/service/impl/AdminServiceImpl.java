@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService{
 	private AdminAuthorityMapper adminAuthorityMapper;
 	
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addAdmin(Admin admin) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -46,7 +46,7 @@ public class AdminServiceImpl implements AdminService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getAdminById(Integer adminId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -62,7 +62,7 @@ public class AdminServiceImpl implements AdminService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyAdminReturnObject(Admin admin) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -76,13 +76,13 @@ public class AdminServiceImpl implements AdminService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyAdminReturnCount(Admin admin) throws Exception {
 		return adminMapper.updateByPrimaryKeySelective(admin);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteAdminReturnObject(Integer adminId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -97,13 +97,13 @@ public class AdminServiceImpl implements AdminService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteAdminReturnCount(Integer adminId) throws Exception {
 		return adminMapper.deleteByPrimaryKey(adminId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getAdminList(PagingTool pagingTool) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -117,7 +117,7 @@ public class AdminServiceImpl implements AdminService{
 
 	
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object login(String account, String password) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();

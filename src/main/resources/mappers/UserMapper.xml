@@ -18,6 +18,12 @@
     <result column="invited_code" property="invitedCode" jdbcType="VARCHAR" />
     <result column="recommend_id" property="recommendId" jdbcType="INTEGER" />
     <result column="last_login_date" property="lastLoginDate" jdbcType="TIMESTAMP" />
+    <result column="consume_total" property="consumeTotal" jdbcType="DECIMAL" />
+    <result column="already_invoice" property="alreadyInvoice" jdbcType="DECIMAL" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="organization" property="organization" jdbcType="VARCHAR" />
+    <result column="license" property="license" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
     <result column="activated" property="activated" jdbcType="INTEGER" />
     <result column="deleted" property="deleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
@@ -26,7 +32,8 @@
   <sql id="Base_Column_List" >
     user_id, user_icon, user_name, nick_name, password, user_type, email, email_code, 
     mobile, address, gender, description, point, invited_code, recommend_id, last_login_date, 
-    activated, deleted, created_date, updated_date
+    consume_total, already_invoice, company, organization, license, industry, activated, 
+    deleted, created_date, updated_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -47,6 +54,8 @@
       email_code, mobile, address, 
       gender, description, point, 
       invited_code, recommend_id, last_login_date, 
+      consume_total, already_invoice, company, 
+      organization, license, industry, 
       activated, deleted, created_date, 
       updated_date)
     values (#{userIcon,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
@@ -54,6 +63,8 @@
       #{emailCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{gender,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{point,jdbcType=INTEGER}, 
       #{invitedCode,jdbcType=VARCHAR}, #{recommendId,jdbcType=INTEGER}, #{lastLoginDate,jdbcType=TIMESTAMP}, 
+      #{consumeTotal,jdbcType=DECIMAL}, #{alreadyInvoice,jdbcType=DECIMAL}, #{company,jdbcType=VARCHAR}, 
+      #{organization,jdbcType=VARCHAR}, #{license,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
       #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
       #{updatedDate,jdbcType=TIMESTAMP})
   </insert>
@@ -107,6 +118,24 @@
       </if>
       <if test="lastLoginDate != null" >
         last_login_date,
+      </if>
+      <if test="consumeTotal != null" >
+        consume_total,
+      </if>
+      <if test="alreadyInvoice != null" >
+        already_invoice,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="organization != null" >
+        organization,
+      </if>
+      <if test="license != null" >
+        license,
+      </if>
+      <if test="industry != null" >
+        industry,
       </if>
       <if test="activated != null" >
         activated,
@@ -166,6 +195,24 @@
       </if>
       <if test="lastLoginDate != null" >
         #{lastLoginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consumeTotal != null" >
+        #{consumeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadyInvoice != null" >
+        #{alreadyInvoice,jdbcType=DECIMAL},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null" >
+        #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="license != null" >
+        #{license,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
       </if>
       <if test="activated != null" >
         #{activated,jdbcType=INTEGER},
@@ -229,6 +276,24 @@
       <if test="lastLoginDate != null" >
         last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="consumeTotal != null" >
+        consume_total = #{consumeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadyInvoice != null" >
+        already_invoice = #{alreadyInvoice,jdbcType=DECIMAL},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null" >
+        organization = #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="license != null" >
+        license = #{license,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
       <if test="activated != null" >
         activated = #{activated,jdbcType=INTEGER},
       </if>
@@ -261,6 +326,12 @@
       invited_code = #{invitedCode,jdbcType=VARCHAR},
       recommend_id = #{recommendId,jdbcType=INTEGER},
       last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP},
+      consume_total = #{consumeTotal,jdbcType=DECIMAL},
+      already_invoice = #{alreadyInvoice,jdbcType=DECIMAL},
+      company = #{company,jdbcType=VARCHAR},
+      organization = #{organization,jdbcType=VARCHAR},
+      license = #{license,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
       activated = #{activated,jdbcType=INTEGER},
       deleted = #{deleted,jdbcType=INTEGER},
       created_date = #{createdDate,jdbcType=TIMESTAMP},

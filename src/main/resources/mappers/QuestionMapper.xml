@@ -202,6 +202,45 @@ FROM
 	</where>
   </select>
   
+ 
+ <!-- 
+ 	List<Question> selectQuestionListForeground(PagingTool pagingTool);
+  -->
+ <select id="selectQuestionListForeground" resultMap="BaseResultMap" parameterType="com.techwells.blue.util.PagingTool">
+ 	SELECT
+	*
+FROM
+	t_question
+	<where>
+		<if test="params.moduleId!=null">
+			and module_id = #{params.moduleId}
+		</if>
+		
+		<if test="params.moduleId==null">
+			AND status = 1
+		</if>
+	</where>
+limit #{startNum},#{pageSize} 	
+ </select>
+ 
+ <!-- 
+ 	int countTotalQuestionListForeground(PagingTool pagingTool);
+  -->
+<select id="countTotalQuestionListForeground" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool">
+ 	SELECT
+	count(*)
+FROM
+	t_question
+	<where>
+		<if test="params.moduleId!=null">
+			and module_id = #{params.moduleId}
+		</if>
+		
+		<if test="params.moduleId==null">
+			AND status = 1
+		</if>
+	</where>
+ </select>
   
   
   

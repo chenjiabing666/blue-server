@@ -36,7 +36,7 @@ public class ModuleServiceImpl implements ModuleService{
 	private IndustryMapper industryMapper;
 	
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addModule(Module module) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -51,7 +51,7 @@ public class ModuleServiceImpl implements ModuleService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getModuleById(Integer moduleId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -87,7 +87,7 @@ public class ModuleServiceImpl implements ModuleService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyModuleReturnObject(Module module) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -101,13 +101,13 @@ public class ModuleServiceImpl implements ModuleService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyModuleReturnCount(Module module) throws Exception {
 		return moduleMapper.updateByPrimaryKeySelective(module);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteModuleReturnObject(Integer moduleId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -122,13 +122,13 @@ public class ModuleServiceImpl implements ModuleService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteModuleReturnCount(Integer moduleId) throws Exception {
 		return moduleMapper.deleteByPrimaryKey(moduleId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getModuleList(PagingTool pagingTool) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -144,6 +144,16 @@ public class ModuleServiceImpl implements ModuleService{
 		resultInfo.setMessage("获取成功");
 		resultInfo.setResult(modules);
 		resultInfo.setTotal(total);
+		return resultInfo;
+	}
+	
+	
+	@Override
+	public Object getModuleByName(String moduleName) throws Exception {
+		ResultInfo resultInfo=new ResultInfo();
+		List<Module> modules=moduleMapper.selectModuleListByName(moduleName);
+		resultInfo.setResult(modules);
+		resultInfo.setMessage("获取成功");
 		return resultInfo;
 	}
 

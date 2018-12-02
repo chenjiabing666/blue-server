@@ -362,4 +362,83 @@ public class ModuleController {
 			return resultInfo;
 		}
 	}
+	
+	
+	/**
+	 * 根据模块名称获取模块（模糊查找）
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/module/getModuleListByName")
+	@ApiOperation(value="根据模块名称获取模块",response=Module.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "moduleName", dataType="String", required = true, value = "模块名称", defaultValue = ""),
+	})
+	public Object getModuleListByName(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		
+		String moduleName=request.getParameter("moduleName");  //模块名称
+		
+		if (StringUtils.isEmpty(moduleName)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("模块名称不能为空");
+			return resultInfo;
+		}
+		
+		
+		//调用service层的方法
+		try {
+			Object object=moduleService.getModuleByName(moduleName);
+			return object;
+		} catch (Exception e) {
+			logger.error("获取模块列表异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("获取模块列表异常");
+			return resultInfo;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }

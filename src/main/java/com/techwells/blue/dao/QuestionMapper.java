@@ -22,5 +22,17 @@ public interface QuestionMapper {
     List<QuestionModuleVos> selectQuestionList(PagingTool pagingTool);
     
     int countTotalQuestionList(PagingTool pagingTool);
+
+    
+    /**
+     * 分页获取问题列表（前台出题）
+     * @param pagingTool
+     * @return
+     */
+    List<Question> selectQuestionListForeground(PagingTool pagingTool);
+    
+	int countTotalQuestionListForeground(PagingTool pagingTool);
+
+	
     
 }

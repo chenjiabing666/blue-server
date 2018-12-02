@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.InvoiceMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Invoice" >
+    <id column="invoice_id" property="invoiceId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="amout" property="amout" jdbcType="DECIMAL" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    invoice_id, user_id, remark, amout, type, title, number, mobile, email, address, 
+    name, status, activated, deleted, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_invoice
+    where invoice_id = #{invoiceId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_invoice
+    where invoice_id = #{invoiceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.Invoice" >
+    <selectKey resultType="java.lang.Integer" keyProperty="invoiceId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_invoice (user_id, remark, amout, 
+      type, title, number, 
+      mobile, email, address, 
+      name, status, activated, 
+      deleted, created_date, updated_date
+      )
+    values (#{userId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{amout,jdbcType=DECIMAL}, 
+      #{type,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Invoice" >
+    <selectKey resultType="java.lang.Integer" keyProperty="invoiceId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_invoice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="amout != null" >
+        amout,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="amout != null" >
+        #{amout,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Invoice" >
+    update t_invoice
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="amout != null" >
+        amout = #{amout,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where invoice_id = #{invoiceId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Invoice" >
+    update t_invoice
+    set user_id = #{userId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      amout = #{amout,jdbcType=DECIMAL},
+      type = #{type,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      number = #{number,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where invoice_id = #{invoiceId,jdbcType=INTEGER}
+  </update>
+  
+ <!-- 
+ 	List<Invoice> selectInvoiceList(PagingTool pagingTool);
+  -->
+ <select id="selectInvoiceList" resultMap="BaseResultMap" parameterType="com.techwells.blue.util.PagingTool">
+	  	SELECT
+		*
+	FROM
+		t_invoice
+	<where>
+		<if test="params.type!=null">
+			and type=#{params.type}
+		</if>
+		
+		<if test="params.number!=null">
+			and number=#{params.number}
+		</if>
+		
+		<if test="params.mobile!=null">
+			and mobile=#{params.mobile}
+		</if>
+		
+		<if test="params.status!=null">
+			and status=#{params.status}
+		</if>
+		
+		<if test="params.title!=null">
+			and title=#{params.title}
+		</if>
+	</where>
+	limit #{startNum},#{pageSize}
+ </select>
+ 
+ 
+ <!-- 
+ 	int countTotalInvoiceList(PagingTool pagingTool);
+  -->
+   <select id="countTotalInvoiceList" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool">
+	  	SELECT
+		count(*)
+	FROM
+		t_invoice
+	<where>
+		<if test="params.type!=null">
+			and type=#{params.type}
+		</if>
+		
+		<if test="params.number!=null">
+			and number=#{params.number}
+		</if>
+		
+		<if test="params.mobile!=null">
+			and mobile=#{params.mobile}
+		</if>
+		
+		<if test="params.status!=null">
+			and status=#{params.status}
+		</if>
+		
+		<if test="params.title!=null">
+			and title=#{params.title}
+		</if>
+	</where>
+ </select>
+  
+  
+</mapper>

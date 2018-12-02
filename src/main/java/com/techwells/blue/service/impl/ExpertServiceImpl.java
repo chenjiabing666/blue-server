@@ -31,7 +31,7 @@ public class ExpertServiceImpl implements ExpertService{
 	private SkillMapper skillMapper;
 	
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addExpert(Expert expert) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -45,7 +45,7 @@ public class ExpertServiceImpl implements ExpertService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getExpertById(Integer expertId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -61,7 +61,7 @@ public class ExpertServiceImpl implements ExpertService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyExpertReturnObject(Expert expert) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -75,13 +75,13 @@ public class ExpertServiceImpl implements ExpertService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyExpertReturnCount(Expert expert) throws Exception {
 		return expertMapper.updateByPrimaryKeySelective(expert);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteExpertReturnObject(Integer expertId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -96,13 +96,13 @@ public class ExpertServiceImpl implements ExpertService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteExpertReturnCount(Integer expertId) throws Exception {
 		return expertMapper.deleteByPrimaryKey(expertId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getExpertList(PagingTool pagingTool) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -121,7 +121,7 @@ public class ExpertServiceImpl implements ExpertService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getExpertListForeground(PagingTool pagingTool)
 			throws Exception {

@@ -23,7 +23,7 @@ public class AaaServiceImpl implements AaaService{
 	@Resource
 	private AaaMapper aaaMapper;
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addAaa(Aaa aaa) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -37,7 +37,7 @@ public class AaaServiceImpl implements AaaService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getAaaById(Integer aaaId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -53,7 +53,7 @@ public class AaaServiceImpl implements AaaService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyAaaReturnObject(Aaa aaa) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -67,13 +67,13 @@ public class AaaServiceImpl implements AaaService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyAaaReturnCount(Aaa aaa) throws Exception {
 		return aaaMapper.updateByPrimaryKeySelective(aaa);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteAaaReturnObject(Integer aaaId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -88,13 +88,13 @@ public class AaaServiceImpl implements AaaService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteAaaReturnCount(Integer aaaId) throws Exception {
 		return aaaMapper.deleteByPrimaryKey(aaaId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getAaaList(PagingTool pagingTool) throws Exception {
 		// TODO Auto-generated method stub

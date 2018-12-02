@@ -72,6 +72,14 @@ public interface ModuleService {
 	 * @throws Exception
 	 */
 	Object getModuleList(PagingTool pagingTool)throws Exception;
+
+	/**
+	 * 根据模块名称获取模块列表
+	 * @param moduleName
+	 * @return
+	 * @throws Exception
+	 */
+	Object getModuleByName(String moduleName)throws Exception;
 	
 	
 	

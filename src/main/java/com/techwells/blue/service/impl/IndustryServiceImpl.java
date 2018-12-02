@@ -24,7 +24,7 @@ public class IndustryServiceImpl implements IndustryService{
 	@Resource
 	private IndustryMapper industryMapper;
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addIndustry(Industry industry) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -38,7 +38,7 @@ public class IndustryServiceImpl implements IndustryService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getIndustryById(Integer industryId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -54,7 +54,7 @@ public class IndustryServiceImpl implements IndustryService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyIndustryReturnObject(Industry industry) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -68,13 +68,13 @@ public class IndustryServiceImpl implements IndustryService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyIndustryReturnCount(Industry industry) throws Exception {
 		return industryMapper.updateByPrimaryKeySelective(industry);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteIndustryReturnObject(Integer industryId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -89,13 +89,13 @@ public class IndustryServiceImpl implements IndustryService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteIndustryReturnCount(Integer industryId) throws Exception {
 		return industryMapper.deleteByPrimaryKey(industryId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getIndustryList(PagingTool pagingTool) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();

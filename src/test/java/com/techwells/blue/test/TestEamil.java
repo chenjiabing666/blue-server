@@ -1,5 +1,7 @@
 package com.techwells.blue.test;
 
+import java.math.BigDecimal;
+
 import org.junit.Test;
 
 import com.techwells.blue.util.SendMailUtils;
@@ -8,9 +10,8 @@ public class TestEamil {
 	
 	@Test
 	public void test1() throws Exception{
-		java.net.URL classUrl = this.getClass().getResource("com.sun.mail.util.TraceInputStream");
-		System.out.println(classUrl);
-//		String url="http://localhost:8080/blue-server/user/bindEmail?uid=1&email=18796327106@163.com";
-//		SendMailUtils.sendTextEmail("蓝色按钮", url, "1655378771@qq.com");
+		BigDecimal a=new BigDecimal(300);
+		BigDecimal b=new BigDecimal(400);
+		System.out.println(a.compareTo(b));
 	}
 }

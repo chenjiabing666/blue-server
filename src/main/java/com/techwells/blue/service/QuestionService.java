@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.techwells.blue.domain.Answer;
 import com.techwells.blue.domain.Question;
+import com.techwells.blue.domain.rs.QuestionAnswerVos;
 import com.techwells.blue.util.PagingTool;
 
 /**
@@ -83,6 +84,21 @@ public interface QuestionService {
 	 * @throws Exception
 	 */
 	Object modifyAnswer(Answer answer)throws Exception;
+
+	/**
+	 * 获取问题列表(前台出题)
+	 * @param pagingTool
+	 * @return
+	 */
+	Object getQuestionListForeground(PagingTool pagingTool)throws Exception;
+
+	/**
+	 * 提交答案
+	 * @param answers
+	 * @return
+	 * @throws Exception
+	 */
+	Object submit(List<QuestionAnswerVos> answers)throws Exception;
 	
 	
 	

@@ -1,13 +1,41 @@
 package com.techwells.blue.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel(value = "答案的实体类")
 public class Answer {
-    private Integer answerId;
+	private Integer answerId;
+	@ApiModelProperty(value = "问题Id")
+	private Integer questionId;
+	@ApiModelProperty(value = "选项的内容")
+	private String content;
+	@ApiModelProperty(value = "答案 1-5对应 A-E")
+	private Integer answer;
+	@ApiModelProperty(value = "1-5 分别对应0%， 25%，50%，75%，100%")
+	private Integer scroeLevel;
+	@ApiModelProperty(value = "常见问题")
+	private String questionReason;
+	private String questionReasonUrl;
+	@ApiModelProperty(value = "建议")
+	private String advise;
+	private String adviseUrl;
+	@ApiModelProperty(value = "解读")
+	private String analysis;
+	private String analysisUrl;
+	private Integer status;
 
-    private Integer questionId;
-    private String content;
-    public String getContent() {
+	private Integer activated;
+
+	private Integer deleted;
+
+	private Date updatedDate;
+
+	private Date createdDate;
+
+	public String getContent() {
 		return content;
 	}
 
@@ -15,149 +43,125 @@ public class Answer {
 		this.content = content;
 	}
 
-	private Integer answer;
+	public Integer getAnswerId() {
+		return answerId;
+	}
 
-    private Integer scroeLevel;
+	public void setAnswerId(Integer answerId) {
+		this.answerId = answerId;
+	}
 
-    private String questionReason;
+	public Integer getQuestionId() {
+		return questionId;
+	}
 
-    private String questionReasonUrl;
+	public void setQuestionId(Integer questionId) {
+		this.questionId = questionId;
+	}
 
-    private String advise;
+	public Integer getAnswer() {
+		return answer;
+	}
 
-    private String adviseUrl;
+	public void setAnswer(Integer answer) {
+		this.answer = answer;
+	}
 
-    private String analysis;
+	public Integer getScroeLevel() {
+		return scroeLevel;
+	}
 
-    private String analysisUrl;
+	public void setScroeLevel(Integer scroeLevel) {
+		this.scroeLevel = scroeLevel;
+	}
 
-    private Integer status;
+	public String getQuestionReason() {
+		return questionReason;
+	}
 
-    private Integer activated;
+	public void setQuestionReason(String questionReason) {
+		this.questionReason = questionReason == null ? null : questionReason
+				.trim();
+	}
 
-    private Integer deleted;
+	public String getQuestionReasonUrl() {
+		return questionReasonUrl;
+	}
 
-    private Date updatedDate;
+	public void setQuestionReasonUrl(String questionReasonUrl) {
+		this.questionReasonUrl = questionReasonUrl == null ? null
+				: questionReasonUrl.trim();
+	}
 
-    private Date createdDate;
+	public String getAdvise() {
+		return advise;
+	}
 
-    public Integer getAnswerId() {
-        return answerId;
-    }
+	public void setAdvise(String advise) {
+		this.advise = advise == null ? null : advise.trim();
+	}
 
-    public void setAnswerId(Integer answerId) {
-        this.answerId = answerId;
-    }
+	public String getAdviseUrl() {
+		return adviseUrl;
+	}
 
-    public Integer getQuestionId() {
-        return questionId;
-    }
+	public void setAdviseUrl(String adviseUrl) {
+		this.adviseUrl = adviseUrl == null ? null : adviseUrl.trim();
+	}
 
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
-    }
+	public String getAnalysis() {
+		return analysis;
+	}
 
-    public Integer getAnswer() {
-        return answer;
-    }
+	public void setAnalysis(String analysis) {
+		this.analysis = analysis == null ? null : analysis.trim();
+	}
 
-    public void setAnswer(Integer answer) {
-        this.answer = answer;
-    }
+	public String getAnalysisUrl() {
+		return analysisUrl;
+	}
 
-    public Integer getScroeLevel() {
-        return scroeLevel;
-    }
+	public void setAnalysisUrl(String analysisUrl) {
+		this.analysisUrl = analysisUrl == null ? null : analysisUrl.trim();
+	}
 
-    public void setScroeLevel(Integer scroeLevel) {
-        this.scroeLevel = scroeLevel;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public String getQuestionReason() {
-        return questionReason;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public void setQuestionReason(String questionReason) {
-        this.questionReason = questionReason == null ? null : questionReason.trim();
-    }
+	public Integer getActivated() {
+		return activated;
+	}
 
-    public String getQuestionReasonUrl() {
-        return questionReasonUrl;
-    }
+	public void setActivated(Integer activated) {
+		this.activated = activated;
+	}
 
-    public void setQuestionReasonUrl(String questionReasonUrl) {
-        this.questionReasonUrl = questionReasonUrl == null ? null : questionReasonUrl.trim();
-    }
+	public Integer getDeleted() {
+		return deleted;
+	}
 
-    public String getAdvise() {
-        return advise;
-    }
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
 
-    public void setAdvise(String advise) {
-        this.advise = advise == null ? null : advise.trim();
-    }
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
 
-    public String getAdviseUrl() {
-        return adviseUrl;
-    }
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
 
-    public void setAdviseUrl(String adviseUrl) {
-        this.adviseUrl = adviseUrl == null ? null : adviseUrl.trim();
-    }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
 
-    public String getAnalysis() {
-        return analysis;
-    }
-
-    public void setAnalysis(String analysis) {
-        this.analysis = analysis == null ? null : analysis.trim();
-    }
-
-    public String getAnalysisUrl() {
-        return analysisUrl;
-    }
-
-    public void setAnalysisUrl(String analysisUrl) {
-        this.analysisUrl = analysisUrl == null ? null : analysisUrl.trim();
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getActivated() {
-        return activated;
-    }
-
-    public void setActivated(Integer activated) {
-        this.activated = activated;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 }

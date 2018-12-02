@@ -1,21 +1,23 @@
 package com.techwells.blue.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.List;
-
+@ApiModel(value = "问题的实体类")
 public class Question {
     private Integer questionId;
 
     private Integer moduleId;
-
+	@ApiModelProperty(value = "问题的内容")
     private String content;
-
+	@ApiModelProperty(value = "文件类型 1 图片 2视频")
     private Integer fileType;
-
+	@ApiModelProperty(value = "文件地址")
     private String file;
-
+	@ApiModelProperty(value = "状态 1 整体 0 非整体")
     private Integer status;
-
     private Integer activated;
 
     private Integer deleted;

@@ -3,6 +3,7 @@ package com.techwells.blue.domain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @ApiModel(value="user实体类")
@@ -43,6 +44,17 @@ public class User {
     private Integer recommendId;
     @ApiModelProperty(value="最后登录的时间")
     private Date lastLoginDate;
+    @ApiModelProperty(value="总的消费金额")
+    private BigDecimal consumeTotal;
+    @ApiModelProperty(value="已开发票的金额")
+    private BigDecimal alreadyInvoice;
+    @ApiModelProperty(value="公司名称")
+    private String company;  
+    private String industry;
+    @ApiModelProperty(value="组织机构")
+    private String organization;
+    @ApiModelProperty(value="营业执照")
+    private String license;
     
     private Integer activated;
 
@@ -61,7 +73,39 @@ public class User {
     }
     
 
-    public String getEmailCode() {
+    public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getIndustry() {
+		return industry;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
+
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
+
+	public String getEmailCode() {
 		return emailCode;
 	}
 
@@ -89,7 +133,23 @@ public class User {
         return nickName;
     }
 
-    public void setNickName(String nickName) {
+    public BigDecimal getConsumeTotal() {
+		return consumeTotal;
+	}
+
+	public void setConsumeTotal(BigDecimal consumeTotal) {
+		this.consumeTotal = consumeTotal;
+	}
+
+	public BigDecimal getAlreadyInvoice() {
+		return alreadyInvoice;
+	}
+
+	public void setAlreadyInvoice(BigDecimal alreadyInvoice) {
+		this.alreadyInvoice = alreadyInvoice;
+	}
+
+	public void setNickName(String nickName) {
         this.nickName = nickName == null ? null : nickName.trim();
     }
 

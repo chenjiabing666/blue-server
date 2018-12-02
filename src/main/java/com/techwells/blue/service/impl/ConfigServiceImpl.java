@@ -23,7 +23,7 @@ public class ConfigServiceImpl implements ConfigService{
 	@Resource
 	private ConfigMapper configMapper;
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addConfig(Config config) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -37,7 +37,7 @@ public class ConfigServiceImpl implements ConfigService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getConfigById(Integer configId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -53,7 +53,7 @@ public class ConfigServiceImpl implements ConfigService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyConfigReturnObject(Config config) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -67,13 +67,13 @@ public class ConfigServiceImpl implements ConfigService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyConfigReturnCount(Config config) throws Exception {
 		return configMapper.updateByPrimaryKeySelective(config);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteConfigReturnObject(Integer configId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -88,13 +88,13 @@ public class ConfigServiceImpl implements ConfigService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteConfigReturnCount(Integer configId) throws Exception {
 		return configMapper.deleteByPrimaryKey(configId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getConfigList(PagingTool pagingTool) throws Exception {
 		// TODO Auto-generated method stub

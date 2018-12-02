@@ -29,6 +29,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
+import com.aliyuncs.http.HttpResponse;
 import com.techwells.blue.util.BlueConstants;
 import com.techwells.blue.util.CRCode;
 import com.techwells.blue.util.CrcodeUtils;
@@ -137,7 +139,6 @@ public class UserController {
 			return resultInfo;
 		}
 	}
-	
 	
 	/**
 	 * 修改用户基本信息
@@ -800,13 +801,12 @@ public class UserController {
 		return result;
 	}
 	
-	
 	/**
 	 * 绑定邮箱（用户点击发送过去的链接）
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/user/checkEmail")
+	@GetMapping("/user/checkEmail")
 	@ApiOperation(value="绑定邮箱（用户点击发送过去的链接）",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
@@ -921,7 +921,7 @@ public class UserController {
 		
 		//没有被绑定，那么需要发送验证链接
 		try {
-			SendMailUtils.sendTextEmail("蓝色按钮", "点击链接绑定邮箱："+url, email);
+			SendMailUtils.sendEmail(email,"蓝色按钮", "点击链接绑定邮箱："+url);
 		} catch (Exception e) {
 			logger.error("发送邮件异常",e);
 			resultInfo.setCode("-1");
@@ -1434,6 +1434,9 @@ public class UserController {
 		outputStream.close();
 		return outputStream.toByteArray();
 	}
+	
+	
+	
 	
 	
 	

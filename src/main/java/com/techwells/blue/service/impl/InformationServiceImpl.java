@@ -36,7 +36,7 @@ public class InformationServiceImpl implements InformationService{
 	@Resource
 	private UserMapper userMapper;
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addInformation(Information information) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -50,7 +50,7 @@ public class InformationServiceImpl implements InformationService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getInformationById(Integer informationId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -66,7 +66,7 @@ public class InformationServiceImpl implements InformationService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifyInformationReturnObject(Information information) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -80,13 +80,13 @@ public class InformationServiceImpl implements InformationService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifyInformationReturnCount(Information information) throws Exception {
 		return informationMapper.updateByPrimaryKeySelective(information);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteInformationReturnObject(Integer informationId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -101,20 +101,20 @@ public class InformationServiceImpl implements InformationService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteInformationReturnCount(Integer informationId) throws Exception {
 		return informationMapper.deleteByPrimaryKey(informationId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getInformationList(PagingTool pagingTool) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getInformationListBack(PagingTool pagingTool)
 			throws Exception {
@@ -135,7 +135,7 @@ public class InformationServiceImpl implements InformationService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getInformationListForeground(PagingTool pagingTool)
 			throws Exception {

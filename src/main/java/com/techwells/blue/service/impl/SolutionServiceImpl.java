@@ -24,7 +24,7 @@ public class SolutionServiceImpl implements SolutionService{
 	@Resource
 	private SolutionMapper solutionMapper;
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object addSolution(Solution solution) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -38,7 +38,7 @@ public class SolutionServiceImpl implements SolutionService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getSolutionById(Integer solutionId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -54,7 +54,7 @@ public class SolutionServiceImpl implements SolutionService{
 		return resultInfo;
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object modifySolutionReturnObject(Solution solution) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -68,13 +68,13 @@ public class SolutionServiceImpl implements SolutionService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int modifySolutionReturnCount(Solution solution) throws Exception {
 		return solutionMapper.updateByPrimaryKeySelective(solution);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object deleteSolutionReturnObject(Integer solutionId) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
@@ -89,13 +89,13 @@ public class SolutionServiceImpl implements SolutionService{
 		return resultInfo;
 	}
 	
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public int deleteSolutionReturnCount(Integer solutionId) throws Exception {
 		return solutionMapper.deleteByPrimaryKey(solutionId);
 	}
 
-	@PrintLog  //输出异常信息到日志文件中
+	
 	@Override
 	public Object getSolutionList(PagingTool pagingTool) throws Exception {
 		// TODO Auto-generated method stub

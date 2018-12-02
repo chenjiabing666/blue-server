@@ -26,6 +26,13 @@ public interface ModuleMapper {
     List<Module> selectModuleList(PagingTool pagingTool);
     
     int countTotalModuleList(PagingTool pagingTool);
+
+    /**
+     * 根据模块名称获取列表
+     * @param moduleName
+     * @return
+     */
+	List<Module> selectModuleListByName(String moduleName);
     
     
 }

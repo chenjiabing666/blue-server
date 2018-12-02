@@ -14,9 +14,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.util.IOTools;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +28,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.techwells.blue.domain.Answer;
 import com.techwells.blue.domain.Question;
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.rs.QuestionAnswerVos;
 import com.techwells.blue.service.QuestionService;
 import com.techwells.blue.util.PagingTool;
 import com.techwells.blue.util.ResultInfo;
@@ -563,6 +566,94 @@ public class QuestionController {
 			return resultInfo;
 		}
 	}
+	
+	/**
+	 * 分页获取问题列表（前台出题）
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/question/getQuestionListForeground")
+	@ApiOperation(value="分页获取问题列表(前台出题)",response=Question.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="int", required = true, value = "每页显示的数量", defaultValue = "10"),
+		@ApiImplicitParam(paramType = "query", name = "moduleId", dataType="int", required = false, value = "模块Id 选择单个模块的时候传值  可选", defaultValue = ""),
+	})
+	public Object getQuestionListForeground(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String pageNum=request.getParameter("pageNum");
+		String pageSize=request.getParameter("pageSize");
+		
+		String moduleId=request.getParameter("moduleId");  //模块Id 选择单个模块的时候传值  可选
+		
+		
+		//校验数据
+		if (StringUtils.isEmpty(pageNum)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("当前页数不能为空");
+			return resultInfo;
+		}
+
+		if (StringUtils.isEmpty(pageSize)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("每页显示的数量不能为空");
+			return resultInfo;
+		}
+
+		// 构造分页数据
+		PagingTool pagingTool = new PagingTool(Integer.parseInt(pageNum),
+				Integer.parseInt(pageSize));
+
+		// 封装过滤条件
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		if (!StringUtils.isEmpty(moduleId)) {
+			params.put("moduleId", Integer.parseInt(moduleId));
+		}
+		
+		try {
+			Object object=questionService.getQuestionListForeground(pagingTool);
+			return object;
+		} catch (Exception e) {
+			logger.error("获取问题列表异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("获取问题列表异常");
+			return resultInfo;
+		}
+	}
+	
+	/**
+	 * 提交答案
+	 * @param answers
+	 * @return
+	 */
+	@PostMapping("/question/submit")
+	@ApiOperation(value="提交答案",response=Question.class,hidden=false)
+	@ApiImplicitParams({
+	})
+	public Object submit(@RequestBody List<QuestionAnswerVos> answers){
+		ResultInfo resultInfo=new ResultInfo();
+		
+		try {
+			Object  object=questionService.submit(answers);
+			return object;
+		} catch (Exception e) {
+			logger.error("提交答案异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("提交答案异常");
+			return resultInfo;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
