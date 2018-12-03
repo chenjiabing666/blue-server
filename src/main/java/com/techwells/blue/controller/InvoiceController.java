@@ -175,7 +175,7 @@ public class InvoiceController {
 	}
 	
 	/**
-	 * 修改发票
+	 * 修改发票的状态（后台处理） 
 	 * @param request
 	 * @return
 	 */
@@ -183,10 +183,12 @@ public class InvoiceController {
 	@ApiOperation(value="修改发票",response=Invoice.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "invoiceId", dataType="int", required = true, value = "发票的invoiceId", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "status", dataType="int", required = true, value = "发票的状态  1 已开具 2 未处理  3 已邮寄", defaultValue = "1"),
 	})
 	public Object modifyInvoice(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
-		String invoiceId=request.getParameter("invoiceId");
+		String invoiceId=request.getParameter("invoiceId");  //发票Id
+		String status=request.getParameter("status");  //发票的状态  1 已开具 2 未处理  3 已邮寄
 		
 		if (StringUtils.isEmpty(invoiceId)) {
 			resultInfo.setCode("-1");
@@ -194,9 +196,16 @@ public class InvoiceController {
 			return resultInfo;
 		}
 		
+		if (StringUtils.isEmpty(status)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("发票状态不能为空");
+			return resultInfo;
+		}
+		
 		//封装数据
 		Invoice invoice=new Invoice();
 		invoice.setInvoiceId(Integer.parseInt(invoiceId));
+		invoice.setStatus(Integer.parseInt(status));
 		
 		//调用service层的方法
 		try {
@@ -269,8 +278,6 @@ public class InvoiceController {
 		String mobile=request.getParameter("mobile");  //手机号码
 		String status=request.getParameter("status"); //状态 1 已开具 2 未处理 3 已邮寄
 		String title=request.getParameter("title");  //发票抬头
-		
-		
 		
 		//校验数据
 		if (StringUtils.isEmpty(pageNum)) {

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.IndustryIndexMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.IndustryIndex" >
+    <id column="industry_index_id" property="industryIndexId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pure_rate" property="pureRate" jdbcType="VARCHAR" />
+    <result column="impure_rate" property="impureRate" jdbcType="VARCHAR" />
+    <result column="flow_rate" property="flowRate" jdbcType="VARCHAR" />
+    <result column="deposit_rate" property="depositRate" jdbcType="VARCHAR" />
+    <result column="account_rate" property="accountRate" jdbcType="VARCHAR" />
+    <result column="business_rate" property="businessRate" jdbcType="VARCHAR" />
+    <result column="profit_rate" property="profitRate" jdbcType="VARCHAR" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    industry_index_id, name, pure_rate, impure_rate, flow_rate, deposit_rate, account_rate, 
+    business_rate, profit_rate, activated, deleted, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_industry_index
+    where industry_index_id = #{industryIndexId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_industry_index
+    where industry_index_id = #{industryIndexId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.IndustryIndex" >
+    <selectKey resultType="java.lang.Integer" keyProperty="industryIndexId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_industry_index (name, pure_rate, impure_rate, 
+      flow_rate, deposit_rate, account_rate, 
+      business_rate, profit_rate, activated, 
+      deleted, created_date, updated_date
+      )
+    values (#{name,jdbcType=VARCHAR}, #{pureRate,jdbcType=VARCHAR}, #{impureRate,jdbcType=VARCHAR}, 
+      #{flowRate,jdbcType=VARCHAR}, #{depositRate,jdbcType=VARCHAR}, #{accountRate,jdbcType=VARCHAR}, 
+      #{businessRate,jdbcType=VARCHAR}, #{profitRate,jdbcType=VARCHAR}, #{activated,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.IndustryIndex" >
+    <selectKey resultType="java.lang.Integer" keyProperty="industryIndexId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_industry_index
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pureRate != null" >
+        pure_rate,
+      </if>
+      <if test="impureRate != null" >
+        impure_rate,
+      </if>
+      <if test="flowRate != null" >
+        flow_rate,
+      </if>
+      <if test="depositRate != null" >
+        deposit_rate,
+      </if>
+      <if test="accountRate != null" >
+        account_rate,
+      </if>
+      <if test="businessRate != null" >
+        business_rate,
+      </if>
+      <if test="profitRate != null" >
+        profit_rate,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pureRate != null" >
+        #{pureRate,jdbcType=VARCHAR},
+      </if>
+      <if test="impureRate != null" >
+        #{impureRate,jdbcType=VARCHAR},
+      </if>
+      <if test="flowRate != null" >
+        #{flowRate,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRate != null" >
+        #{depositRate,jdbcType=VARCHAR},
+      </if>
+      <if test="accountRate != null" >
+        #{accountRate,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRate != null" >
+        #{businessRate,jdbcType=VARCHAR},
+      </if>
+      <if test="profitRate != null" >
+        #{profitRate,jdbcType=VARCHAR},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.IndustryIndex" >
+    update t_industry_index
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pureRate != null" >
+        pure_rate = #{pureRate,jdbcType=VARCHAR},
+      </if>
+      <if test="impureRate != null" >
+        impure_rate = #{impureRate,jdbcType=VARCHAR},
+      </if>
+      <if test="flowRate != null" >
+        flow_rate = #{flowRate,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRate != null" >
+        deposit_rate = #{depositRate,jdbcType=VARCHAR},
+      </if>
+      <if test="accountRate != null" >
+        account_rate = #{accountRate,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRate != null" >
+        business_rate = #{businessRate,jdbcType=VARCHAR},
+      </if>
+      <if test="profitRate != null" >
+        profit_rate = #{profitRate,jdbcType=VARCHAR},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where industry_index_id = #{industryIndexId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.IndustryIndex" >
+    update t_industry_index
+    set name = #{name,jdbcType=VARCHAR},
+      pure_rate = #{pureRate,jdbcType=VARCHAR},
+      impure_rate = #{impureRate,jdbcType=VARCHAR},
+      flow_rate = #{flowRate,jdbcType=VARCHAR},
+      deposit_rate = #{depositRate,jdbcType=VARCHAR},
+      account_rate = #{accountRate,jdbcType=VARCHAR},
+      business_rate = #{businessRate,jdbcType=VARCHAR},
+      profit_rate = #{profitRate,jdbcType=VARCHAR},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where industry_index_id = #{industryIndexId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 
+  	List<IndustryIndex> selectIndustryIndexList(PagingTool pagingTool);
+   -->
+  <select id="selectIndustryIndexList" resultMap="BaseResultMap" parameterType="com.techwells.blue.util.PagingTool">
+  		select * from t_industry_index
+  		<where>
+  			<if test="params.name!=null">
+  				and name=#{params.name}
+  			</if>
+  		</where>
+  		limit #{startNum},#{pageSize}
+  </select>
+  
+  
+  <!-- 
+  	int countTotalIndustryIndexList(PagingTool pagingTool);
+   -->
+   <select id="countTotalIndustryIndexList" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool">
+  		select count(*) from t_industry_index
+  		<where>
+  			<if test="params.name!=null">
+  				and name=#{params.name}
+  			</if>
+  		</where>
+  		limit #{startNum},#{pageSize}
+  </select>
+  
+</mapper>

@@ -69,6 +69,9 @@ public class SolutionController {
 		String[] analysis = request.getParameterValues("analysis");  //解读
 		String[] types=request.getParameterValues("types");  //类型 1 高分 2 中等 3 低分
 		
+		String qFlag=request.getParameter("qFlag"); //上传文件的标记
+		String adFlag=request.getParameter("adFlag");
+		String anFlag=request.getParameter("anFlag");
 		
 		if (StringUtils.isEmpty(moduleId)) {
 			resultInfo.setCode("-1");
@@ -86,7 +89,8 @@ public class SolutionController {
 		
 		//总共有高中低三种解决方案
 		for (int i = 0; i <3; i++) {
-			if (questionReasonFiles[i]==null||adviseFiles[i]==null||analysisFiles[i]==null) {
+			
+			if (!anFlag.contains(String.valueOf(i+1))||!qFlag.contains(String.valueOf(i+1))||!adFlag.contains(String.valueOf(i+1))) {
 				resultInfo.setCode("-1");
 				resultInfo.setMessage("文件不能为空");
 				return resultInfo;
@@ -174,7 +178,6 @@ public class SolutionController {
 	}
 	
 	
-	
 	/**
 	 * 获取解决方案详情
 	 * @param request
@@ -218,9 +221,16 @@ public class SolutionController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "solutionId", dataType="int", required = true, value = "解决方案的solutionId", defaultValue = "1"),
 	})
-	public Object modifySolution(HttpServletRequest request){
+	public Object modifySolution(HttpServletRequest request,
+			@RequestParam(value = "questionReasonFile",required=false) MultipartFile questionReasonFile,
+			@RequestParam(value = "adviseFile",required=false) MultipartFile adviseFile,
+			@RequestParam(value = "analysisFile",required=false) MultipartFile analysisFile){
 		ResultInfo resultInfo=new ResultInfo();
-		String solutionId=request.getParameter("solutionId");
+		
+		String solutionId = request.getParameter("solutionId"); // 解决方案Id
+		String questionReasons = request.getParameter("questionReasons"); // 常见问题及原因
+		String advise = request.getParameter("advise"); // 建议
+		String analysis = request.getParameter("analysis"); // 解读
 		
 		if (StringUtils.isEmpty(solutionId)) {
 			resultInfo.setCode("-1");
@@ -231,6 +241,73 @@ public class SolutionController {
 		//封装数据
 		Solution solution=new Solution();
 		solution.setSolutionId(Integer.parseInt(solutionId));
+		solution.setQuestionReason(questionReasons);
+		solution.setAdvise(advise);
+		solution.setAnalysis(analysis);
+		
+		String path=BlueConstants.UPLOAD_PATH+"solution-image/";
+		if (questionReasonFile!=null) {
+			//上传三个文件
+			String qname=System.currentTimeMillis()+questionReasonFile.getOriginalFilename();
+			File qFile=new File(path,qname);
+			String qUrl=BlueConstants.UPLOAD_URL+"solution-image/"+qname;
+			try {
+				UploadFileUtils.createChildFolder(qFile);  //创建文件夹
+			} catch (Exception e) {
+				logger.error("创建子文件夹异常",e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("创建子文件夹异常");
+				return resultInfo;
+			}
+			
+			//上传
+			try {
+				questionReasonFile.transferTo(qFile);
+			} catch (Exception e) {
+				logger.error("上传文件异常",e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("上传文件异常");
+				return resultInfo;
+			}
+			solution.setQuestionReasonUrl(qUrl);
+		}
+		
+		if (adviseFile!=null) {
+			String adname=System.currentTimeMillis()+adviseFile.getOriginalFilename();
+			File adFile=new File(path,adname);
+			String adUrl=BlueConstants.UPLOAD_URL+"solution-image/"+adname;
+			
+			//上传
+			try {
+				adviseFile.transferTo(adFile);
+			} catch (Exception e) {
+				logger.error("上传文件异常",e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("上传文件异常");
+				return resultInfo;
+			}
+			solution.setAdviseUrl(adUrl);
+		}
+			
+		
+		if (analysisFile!=null) {
+
+			String anname=System.currentTimeMillis()+analysisFile.getOriginalFilename();
+			File anFile=new File(path,anname);
+			String anUrl=BlueConstants.UPLOAD_URL+"solution-image/"+anname;
+			
+			//上传
+			try {
+				analysisFile.transferTo(anFile);
+			} catch (Exception e) {
+				logger.error("上传文件异常",e);
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("上传文件异常");
+				return resultInfo;
+			}
+			solution.setAnalysisUrl(anUrl);
+		}
+		
 		
 		//调用service层的方法
 		try {

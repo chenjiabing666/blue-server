@@ -58,11 +58,11 @@
 				sqlStatement="SELECT LAST_INSERT_ID()"></generatedKey>
 		</table> --> 
 		
-		<table tableName="t_order" domainObjectName="Order"
+		<table tableName="t_industry_index" domainObjectName="IndustryIndex"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false">
-			<generatedKey column="order_id" identity="true"
+			<generatedKey column="industry_index_id" identity="true"
 				sqlStatement="SELECT LAST_INSERT_ID()"></generatedKey>
 		</table>
 		

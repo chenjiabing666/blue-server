@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.techwells.blue.domain.EnterpriseAuth;
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.Warm;
 import com.techwells.blue.util.PagingTool;
 
 /**
@@ -159,6 +160,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	List<User> getUserBatchByIds(String[] userIds)throws Exception;
+
+	/**
+	 * 提交热身问题的答案
+	 * @param warm
+	 * @return
+	 * @throws Exception
+	 */
+	Object addWarm(Warm warm)throws Exception;
 	
 	
 	

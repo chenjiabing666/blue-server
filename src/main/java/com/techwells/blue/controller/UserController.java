@@ -48,6 +48,7 @@ import com.techwells.blue.util.UploadFileUtils;
 import com.techwells.blue.domain.EnterpriseAuth;
 import com.techwells.blue.domain.User;
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.Warm;
 import com.techwells.blue.domain.rs.UserRecommendVos;
 import com.techwells.blue.service.UserService;
 import com.techwells.blue.util.PagingTool;
@@ -68,7 +69,6 @@ public class UserController {
 
 	@Value("${bindEmailUrl}")
 	private String bindEmailUrl;
-	
 	
 	private Logger logger=LoggerFactory.getLogger(UserController.class); //日志
 	
@@ -1262,7 +1262,6 @@ public class UserController {
 		
 	}
 	
-	
 	/**
 	 * 根据Id获取审核详情（后台）
 	 * @param request
@@ -1293,7 +1292,6 @@ public class UserController {
 			return resultInfo;
 		}
 	}
-
 	
 	/**
 	 * 认证批量审核（后台）
@@ -1436,6 +1434,67 @@ public class UserController {
 	}
 	
 	
+	/**
+	 * 提交热身问题的答案
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/user/addWarm")
+	@ApiOperation(value="提交热身问题的答案",response=ResultInfo.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "company", dataType="String", required = true, value = "公司名称", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "industry", dataType="String", required = true, value = "行业", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "stage", dataType="int", required = true, value = "企业的阶段 1 引入期 2 发展期 3 成熟期 4 衰退期", defaultValue = ""),
+	})
+	public Object addWarm(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String userId=request.getParameter("userId");   //用户Id
+		String company=request.getParameter("company");  //公司名称
+		String industry=request.getParameter("industry");  //行业
+		String stage=request.getParameter("stage");  // 企业的阶段 1 引入期 2 发展期 3 成熟期 4 衰退期
+		
+		if (StringUtils.isEmpty(userId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("用户Id不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(company)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("公司名称不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(industry)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("行业不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(stage)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("企业的阶段不能为空");
+			return resultInfo;
+		}
+		
+		Warm warm=new Warm();
+		warm.setCreatedDate(new Date());
+		warm.setStage(Integer.parseInt(stage));
+		warm.setCompany(company);
+		warm.setIndustry(industry);
+		warm.setUserId(Integer.parseInt(userId));
+		
+		try {
+			Object object=userService.addWarm(warm);
+			return object;
+		} catch (Exception e) {
+			logger.error("提交异常",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("提交异常");
+			return resultInfo;
+		}
+	}
 	
 	
 	

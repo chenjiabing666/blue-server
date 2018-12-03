@@ -1,5 +1,6 @@
 package com.techwells.blue.service.impl;
 
+import java.math.BigDecimal;
 import java.security.interfaces.RSAKey;
 import java.util.Date;
 import java.util.List;
@@ -202,6 +203,27 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public int paySuccess(Order order) throws Exception {
+
+		//查看是否有邀请人，如果有，那么需要返三个积分
+		User user = userMapper.selectByPrimaryKey(order.getUserId()); //
+		if (user == null) {  //如果用户为空，表示这个人不存在
+			return 0;
+		}
+		
+		if (user.getRecommendId()!=null) {
+			User recommendUser=userMapper.selectByPrimaryKey(user.getRecommendId());
+			if (recommendUser!=null) {
+				double amount = order.getAmount().doubleValue();  //支付的金额
+				long round = Math.round(amount*0.3);   //奖励的积分
+				recommendUser.setPoint(recommendUser.getPoint()+(int)round);
+				int count2=userMapper.updateByPrimaryKeySelective(recommendUser);
+				if ( count2==0) {
+					return 0;
+				}
+			}
+		}
+		
+		
 		int count=orderMapper.updateByPrimaryKeySelective(order);
 		if (count==0) {
 			return 0;

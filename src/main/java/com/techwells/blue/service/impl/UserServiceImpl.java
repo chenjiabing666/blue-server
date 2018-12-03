@@ -12,8 +12,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.techwells.blue.annotation.PrintLog;
 import com.techwells.blue.dao.EnterpriseAuthMapper;
 import com.techwells.blue.dao.UserMapper;
+import com.techwells.blue.dao.WarmMapper;
 import com.techwells.blue.domain.EnterpriseAuth;
 import com.techwells.blue.domain.User;
+import com.techwells.blue.domain.Warm;
 import com.techwells.blue.domain.rs.AuthUserVos;
 import com.techwells.blue.domain.rs.UserRecommendVos;
 import com.techwells.blue.service.UserService;
@@ -32,6 +34,8 @@ public class UserServiceImpl implements UserService{
 	
 	@Resource
 	private EnterpriseAuthMapper authMapper;
+	@Resource
+	private WarmMapper warmMapper;
 	
 	
 	
@@ -335,6 +339,20 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<User> getUserBatchByIds(String[] userIds) throws Exception {
 		return userMapper.selectUserBatchByIds(userIds);
+	}
+
+
+	@Override
+	public Object addWarm(Warm warm) throws Exception {
+		ResultInfo resultInfo=new ResultInfo();
+		int count=warmMapper.insertSelective(warm);
+		if (count==0) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("提交失败");
+			return resultInfo;
+		}
+		resultInfo.setMessage("提交成功");
+		return resultInfo;
 	}
 	
 }

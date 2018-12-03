@@ -10,8 +10,8 @@ public class TestEamil {
 	
 	@Test
 	public void test1() throws Exception{
-		BigDecimal a=new BigDecimal(300);
-		BigDecimal b=new BigDecimal(400);
-		System.out.println(a.compareTo(b));
+		long round = Math.round(10.2*0.3);
+		System.out.println((int)round);
+		
 	}
 }

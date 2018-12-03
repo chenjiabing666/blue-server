@@ -72,7 +72,6 @@ public class IndustryController {
 		}
 	}
 
-	
 	/**
 	 * 获取行业详情
 	 * @param request
