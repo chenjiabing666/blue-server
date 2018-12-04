@@ -113,6 +113,17 @@ public class IndustryServiceImpl implements IndustryService{
 		return resultInfo;
 	}
 
+
+	@Override
+	public Object getIndustryByName(String industryName) throws Exception {
+		ResultInfo resultInfo=new ResultInfo(); 
+		List<Industry> industries=industryMapper.selectIndustryListByName(industryName);
+		resultInfo.setMessage("获取成功");
+		resultInfo.setResult(industries);
+		resultInfo.setTotal(industries.size());
+		return resultInfo;
+	}
+
 	
 	
 	

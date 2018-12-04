@@ -72,6 +72,14 @@ public interface IndustryService {
 	 * @throws Exception
 	 */
 	Object getIndustryList(PagingTool pagingTool)throws Exception;
+
+	/**
+	 * 根据行业名称模糊搜索
+	 * @param industryName
+	 * @return
+	 * @throws Exception
+	 */
+	Object getIndustryByName(String industryName)throws Exception;
 	
 	
 	

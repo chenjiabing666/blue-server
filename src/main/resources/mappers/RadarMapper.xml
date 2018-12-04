@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.RadarMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Radar" >
+    <id column="radar_id" property="radarId" jdbcType="INTEGER" />
+    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="industry_id" property="industryId" jdbcType="INTEGER" />
+    <result column="avg_level" property="avgLevel" jdbcType="DOUBLE" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    radar_id, module_id, industry_id, avg_level, activated, deleted, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_radar
+    where radar_id = #{radarId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_radar
+    where radar_id = #{radarId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.Radar" >
+    <selectKey resultType="java.lang.Integer" keyProperty="radarId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_radar (module_id, industry_id, avg_level, 
+      activated, deleted, created_date, 
+      updated_date)
+    values (#{moduleId,jdbcType=INTEGER}, #{industryId,jdbcType=INTEGER}, #{avgLevel,jdbcType=DOUBLE}, 
+      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{updatedDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Radar" >
+    <selectKey resultType="java.lang.Integer" keyProperty="radarId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_radar
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="moduleId != null" >
+        module_id,
+      </if>
+      <if test="industryId != null" >
+        industry_id,
+      </if>
+      <if test="avgLevel != null" >
+        avg_level,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="moduleId != null" >
+        #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="industryId != null" >
+        #{industryId,jdbcType=INTEGER},
+      </if>
+      <if test="avgLevel != null" >
+        #{avgLevel,jdbcType=DOUBLE},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Radar" >
+    update t_radar
+    <set >
+      <if test="moduleId != null" >
+        module_id = #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="industryId != null" >
+        industry_id = #{industryId,jdbcType=INTEGER},
+      </if>
+      <if test="avgLevel != null" >
+        avg_level = #{avgLevel,jdbcType=DOUBLE},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where radar_id = #{radarId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Radar" >
+    update t_radar
+    set module_id = #{moduleId,jdbcType=INTEGER},
+      industry_id = #{industryId,jdbcType=INTEGER},
+      avg_level = #{avgLevel,jdbcType=DOUBLE},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where radar_id = #{radarId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 
+  	List<RadarModuleIndustryVos> selectRadarList(PagingTool pagingTool);
+   -->
+  <select id="selectRadarList" resultType="com.techwells.blue.domain.rs.RadarModuleIndustryVos" parameterType="com.techwells.blue.util.PagingTool">
+	  		SELECT
+		r.*, m.module_name,
+		i. NAME AS industryName
+	FROM
+		t_module m,
+		t_industry i,
+		t_radar r
+	<where>
+		AND	r.module_id = m.module_id
+		AND i.industry_id = r.industry_id
+		<if test="params.moduleId!=null">
+			and r.module_id=#{params.moduleId}
+		</if>
+		
+		<if test="params.industryId!=null">
+			and r.industry_id=#{params.industryId}
+		</if>
+	</where>
+		limit #{startNum},#{pageSize}	
+  </select>
+  
+  
+  <!-- 
+  	int countTotalRadarList(PagingTool pagingTool);
+   -->
+  <select id="countTotalRadarList" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool">
+	  		SELECT
+		count(*)
+	FROM
+		t_module m,
+		t_industry i,
+		t_radar r
+	<where>
+		AND	r.module_id = m.module_id
+		AND i.industry_id = r.industry_id
+		<if test="params.moduleId!=null">
+			and r.module_id=#{params.moduleId}
+		</if>
+		
+		<if test="params.industryId!=null">
+			and r.industry_id=#{params.industryId}
+		</if>
+	</where>
+  </select>
+  
+  
+</mapper>

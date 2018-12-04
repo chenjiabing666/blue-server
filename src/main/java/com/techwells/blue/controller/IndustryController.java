@@ -104,7 +104,6 @@ public class IndustryController {
 		}
 	}
 	
-	
 	/**
 	 * 修改行业
 	 * @param request
@@ -224,4 +223,44 @@ public class IndustryController {
 			return resultInfo;
 		}
 	}
+
+	
+	/**
+	 * 根据行业名称模糊搜索
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/industry/getIndustryByName")
+	@ApiOperation(value="根据行业名称模糊搜索",response=Industry.class,hidden=false)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "industryName", dataType="String", required = true, value = "行业名称", defaultValue = ""),
+	})
+	public Object getIndustryByName(HttpServletRequest request){
+		ResultInfo resultInfo=new ResultInfo();
+		String industryName=request.getParameter("industryName"); //行业名称
+		
+		if (StringUtils.isEmpty(industryName)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("行业名称不能为空");
+			return resultInfo;
+		}
+		
+		//调用service层的方法
+		try {
+			Object object=industryService.getIndustryByName(industryName);
+			return object;
+		} catch (Exception e) {
+			logger.error("获取行业详细信息失败",e);
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("异常");
+			return resultInfo;
+		}
+	}
+	
+	
+	
+	
+	
+	
+
 }

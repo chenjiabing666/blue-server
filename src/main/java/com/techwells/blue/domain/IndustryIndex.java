@@ -6,6 +6,7 @@ public class IndustryIndex {
     private Integer industryIndexId;
 
     private String name;
+    private Integer industryId;
 
     private String pureRate;
 
@@ -41,7 +42,15 @@ public class IndustryIndex {
         return name;
     }
 
-    public void setName(String name) {
+    public Integer getIndustryId() {
+		return industryId;
+	}
+
+	public void setIndustryId(Integer industryId) {
+		this.industryId = industryId;
+	}
+
+	public void setName(String name) {
         this.name = name == null ? null : name.trim();
     }
 

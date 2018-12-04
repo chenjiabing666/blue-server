@@ -29,6 +29,7 @@ import com.techwells.blue.domain.Answer;
 import com.techwells.blue.domain.Question;
 import com.techwells.blue.domain.User;
 import com.techwells.blue.domain.rs.QuestionAnswerVos;
+import com.techwells.blue.domain.rs.SubmitVos;
 import com.techwells.blue.service.QuestionService;
 import com.techwells.blue.util.PagingTool;
 import com.techwells.blue.util.ResultInfo;
@@ -624,6 +625,7 @@ public class QuestionController {
 	
 	/**
 	 * 提交答案
+	 * 
 	 * @param answers
 	 * @return
 	 */
@@ -631,9 +633,8 @@ public class QuestionController {
 	@ApiOperation(value="提交答案",response=Question.class,hidden=false)
 	@ApiImplicitParams({
 	})
-	public Object submit(@RequestBody List<QuestionAnswerVos> answers){
+	public Object submit(@RequestBody SubmitVos answers){
 		ResultInfo resultInfo=new ResultInfo();
-		
 		try {
 			Object  object=questionService.submit(answers);
 			return object;

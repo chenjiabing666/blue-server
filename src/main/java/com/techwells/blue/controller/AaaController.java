@@ -43,7 +43,7 @@ public class AaaController {
 	 * @return
 	 */
 	@PostMapping("/aaa/addAaa")
-	@ApiOperation(value="添加模板",response=Aaa.class,hidden=true)
+	@ApiOperation(value="添加模板",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "aaaName", dataType="String", required = true, value = "模板的aaaName", defaultValue = "Tom"),
 	})
@@ -114,7 +114,7 @@ public class AaaController {
 	 * @return
 	 */
 	@PostMapping("/aaa/modifyAaa")
-	@ApiOperation(value="修改模板",response=Aaa.class,hidden=true)
+	@ApiOperation(value="修改模板",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="int", required = true, value = "模板的aaaId", defaultValue = "1"),
 	})
@@ -152,7 +152,7 @@ public class AaaController {
 	 * @return
 	 */
 	@PostMapping("/aaa/deleteAaaById")
-	@ApiOperation(value="根据Id删除模板",response=Aaa.class,hidden=true)
+	@ApiOperation(value="根据Id删除模板",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "aaaId", dataType="int", required = true, value = "模板的aaaId", defaultValue = "1"),
 	})

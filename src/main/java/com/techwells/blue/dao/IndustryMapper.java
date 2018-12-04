@@ -21,5 +21,12 @@ public interface IndustryMapper {
     List<Industry> selectIndustryList(PagingTool pagingTool);
     
     int countTotalIndustryList(PagingTool pagingTool);
+
+    /**
+     * 行业名称模糊搜索
+     * @param industryName
+     * @return
+     */
+	List<Industry> selectIndustryListByName(String industryName);
     
 }

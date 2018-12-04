@@ -1,59 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.techwells.blue.dao.WarmMapper" >
-  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Warm" >
-    <id column="warm_id" property="warmId" jdbcType="INTEGER" />
+<mapper namespace="com.techwells.blue.dao.RecordMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Record" >
+    <id column="record_id" property="recordId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="company" property="company" jdbcType="VARCHAR" />
-    <result column="industry_id" property="industryId" jdbcType="INTEGER" />
-    <result column="stage" property="stage" jdbcType="INTEGER" />
+    <result column="report_id" property="reportId" jdbcType="INTEGER" />
+    <result column="answer_id" property="answerId" jdbcType="INTEGER" />
     <result column="activated" property="activated" jdbcType="INTEGER" />
     <result column="deleted" property="deleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    warm_id, user_id, company, industry_id, stage, activated, deleted, created_date, 
-    updated_date
+    record_id, user_id, report_id, answer_id, activated, deleted, created_date, updated_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_warm
-    where warm_id = #{warmId,jdbcType=INTEGER}
+    from t_record
+    where record_id = #{recordId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_warm
-    where warm_id = #{warmId,jdbcType=INTEGER}
+    delete from t_record
+    where record_id = #{recordId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.techwells.blue.domain.Warm" >
-    <selectKey resultType="java.lang.Integer" keyProperty="warmId" order="AFTER" >
+  <insert id="insert" parameterType="com.techwells.blue.domain.Record" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_warm (user_id, company, industry_id, 
-      stage, activated, deleted, 
-      created_date, updated_date)
-    values (#{userId,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR}, #{industryId,jdbcType=INTEGER}, 
-      #{stage,jdbcType=INTEGER}, #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
+    insert into t_record (user_id, report_id, answer_id, 
+      activated, deleted, created_date, 
+      updated_date)
+    values (#{userId,jdbcType=INTEGER}, #{reportId,jdbcType=INTEGER}, #{answerId,jdbcType=INTEGER}, 
+      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{updatedDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Warm" >
-    <selectKey resultType="java.lang.Integer" keyProperty="warmId" order="AFTER" >
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Record" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_warm
+    insert into t_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="company != null" >
-        company,
+      <if test="reportId != null" >
+        report_id,
       </if>
-      <if test="industryId != null" >
-        industry_id,
-      </if>
-      <if test="stage != null" >
-        stage,
+      <if test="answerId != null" >
+        answer_id,
       </if>
       <if test="activated != null" >
         activated,
@@ -72,14 +67,11 @@
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="company != null" >
-        #{company,jdbcType=VARCHAR},
+      <if test="reportId != null" >
+        #{reportId,jdbcType=INTEGER},
       </if>
-      <if test="industryId != null" >
-        #{industryId,jdbcType=INTEGER},
-      </if>
-      <if test="stage != null" >
-        #{stage,jdbcType=INTEGER},
+      <if test="answerId != null" >
+        #{answerId,jdbcType=INTEGER},
       </if>
       <if test="activated != null" >
         #{activated,jdbcType=INTEGER},
@@ -95,20 +87,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Warm" >
-    update t_warm
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Record" >
+    update t_record
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="company != null" >
-        company = #{company,jdbcType=VARCHAR},
+      <if test="reportId != null" >
+        report_id = #{reportId,jdbcType=INTEGER},
       </if>
-      <if test="industryId != null" >
-        industry_id = #{industryId,jdbcType=INTEGER},
-      </if>
-      <if test="stage != null" >
-        stage = #{stage,jdbcType=INTEGER},
+      <if test="answerId != null" >
+        answer_id = #{answerId,jdbcType=INTEGER},
       </if>
       <if test="activated != null" >
         activated = #{activated,jdbcType=INTEGER},
@@ -123,31 +112,17 @@
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where warm_id = #{warmId,jdbcType=INTEGER}
+    where record_id = #{recordId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Warm" >
-    update t_warm
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Record" >
+    update t_record
     set user_id = #{userId,jdbcType=INTEGER},
-      company = #{company,jdbcType=VARCHAR},
-      industry_id = #{industryId,jdbcType=INTEGER},
-      stage = #{stage,jdbcType=INTEGER},
+      report_id = #{reportId,jdbcType=INTEGER},
+      answer_id = #{answerId,jdbcType=INTEGER},
       activated = #{activated,jdbcType=INTEGER},
       deleted = #{deleted,jdbcType=INTEGER},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
-    where warm_id = #{warmId,jdbcType=INTEGER}
+    where record_id = #{recordId,jdbcType=INTEGER}
   </update>
-  
-  
-  <!-- 
-  	Warm selectByUserId(Integer userId);
-   -->
-  <select id="selectByUserId" resultMap="BaseResultMap">
-  	select 
-    <include refid="Base_Column_List" />
-    from t_warm
-    where user_id=#{userId}
-  </select>
-  
-  
 </mapper>

@@ -1433,7 +1433,6 @@ public class UserController {
 		return outputStream.toByteArray();
 	}
 	
-	
 	/**
 	 * 提交热身问题的答案
 	 * @param request
@@ -1444,14 +1443,14 @@ public class UserController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", dataType="int", required = true, value = "用户Id", defaultValue = "1"),
 		@ApiImplicitParam(paramType = "query", name = "company", dataType="String", required = true, value = "公司名称", defaultValue = ""),
-		@ApiImplicitParam(paramType = "query", name = "industry", dataType="String", required = true, value = "行业", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "industryId", dataType="int", required = true, value = "行业", defaultValue = ""),
 		@ApiImplicitParam(paramType = "query", name = "stage", dataType="int", required = true, value = "企业的阶段 1 引入期 2 发展期 3 成熟期 4 衰退期", defaultValue = ""),
 	})
 	public Object addWarm(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
 		String userId=request.getParameter("userId");   //用户Id
 		String company=request.getParameter("company");  //公司名称
-		String industry=request.getParameter("industry");  //行业
+		String industryId=request.getParameter("industryId");  //行业Id
 		String stage=request.getParameter("stage");  // 企业的阶段 1 引入期 2 发展期 3 成熟期 4 衰退期
 		
 		if (StringUtils.isEmpty(userId)) {
@@ -1466,7 +1465,7 @@ public class UserController {
 			return resultInfo;
 		}
 		
-		if (StringUtils.isEmpty(industry)) {
+		if (StringUtils.isEmpty(industryId)) {
 			resultInfo.setCode("-1");
 			resultInfo.setMessage("行业不能为空");
 			return resultInfo;
@@ -1482,7 +1481,7 @@ public class UserController {
 		warm.setCreatedDate(new Date());
 		warm.setStage(Integer.parseInt(stage));
 		warm.setCompany(company);
-		warm.setIndustry(industry);
+		warm.setIndustryId(Integer.parseInt(industryId));
 		warm.setUserId(Integer.parseInt(userId));
 		
 		try {

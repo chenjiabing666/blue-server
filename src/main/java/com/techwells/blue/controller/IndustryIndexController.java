@@ -46,6 +46,7 @@ public class IndustryIndexController {
 	@PostMapping("/industryIndex/addIndustryIndex")
 	@ApiOperation(value="添加行业数据指标",response=IndustryIndex.class,hidden=true)
 	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "industryId", dataType="int", required = true, value = "行业Id", defaultValue = ""),
 		@ApiImplicitParam(paramType = "query", name = "name", dataType="String", required = true, value = "标杆企业名称", defaultValue = ""),
 		@ApiImplicitParam(paramType = "query", name = "pureRate", dataType="String", required = true, value = "销售净利率", defaultValue = ""),
 		@ApiImplicitParam(paramType = "query", name = "impureRate", dataType="String", required = true, value = "毛利率", defaultValue = ""),
@@ -57,6 +58,7 @@ public class IndustryIndexController {
 	})
 	public Object addIndustryIndex(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
+		String industryId=request.getParameter("industryId"); //行业Id
 		String industryIndexName=request.getParameter("name"); //标杆企业名称
 		String pureRate=request.getParameter("pureRate"); //销售净利率
 		String impureRate=request.getParameter("impureRate");  //毛利率
@@ -69,6 +71,12 @@ public class IndustryIndexController {
 		if (StringUtils.isEmpty(industryIndexName)) {
 			resultInfo.setCode("-1");
 			resultInfo.setMessage("标杆企业名称不能为空");
+			return resultInfo;
+		}
+		
+		if (StringUtils.isEmpty(industryId)) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("行业Id不能为空");
 			return resultInfo;
 		}
 		
@@ -125,6 +133,7 @@ public class IndustryIndexController {
 		industryIndex.setProfitRate(profitRate);
 		industryIndex.setPureRate(pureRate);
 		industryIndex.setAccountRate(accountRate);
+		industryIndex.setIndustryId(Integer.parseInt(industryId));
 		
 		//调用service层的方法
 		try {
@@ -249,6 +258,7 @@ public class IndustryIndexController {
 		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType="int", required = true, value = "当前的页数", defaultValue = "1"),
 		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType="int", required = true, value = "每页显示的数量", defaultValue = "10"),
 		@ApiImplicitParam(paramType = "query", name = "name", dataType="String", required = false, value = "每页显示的数量", defaultValue = ""),
+		@ApiImplicitParam(paramType = "query", name = "industryId", dataType="int", required = false, value = "行业Id", defaultValue = ""),
 	})
 	public Object getIndustryIndexList(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();
@@ -257,6 +267,7 @@ public class IndustryIndexController {
 		String pageSize=request.getParameter("pageSize");
 		
 		String name=request.getParameter("name"); //标杆企业名称
+		String industryId=request.getParameter("industryId"); //行业Id
 		
 		//校验数据
 		if (StringUtils.isEmpty(pageNum)) {
@@ -279,6 +290,10 @@ public class IndustryIndexController {
 		
 		if (!StringUtils.isEmpty(name)) {
 			params.put("name", name);
+		}
+		
+		if (!StringUtils.isEmpty(industryId)) {
+			params.put("industryId", Integer.parseInt(industryId));
 		}
 		
 		pagingTool.setParams(params);

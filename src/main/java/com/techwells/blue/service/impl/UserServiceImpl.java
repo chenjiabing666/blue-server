@@ -345,6 +345,16 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Object addWarm(Warm warm) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
+		
+		//根据用户Id获取详情
+		Warm warm2=warmMapper.selectByUserId(warm.getUserId());
+		
+		if (warm2!=null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("提交成功");
+			return resultInfo;
+		}
+		
 		int count=warmMapper.insertSelective(warm);
 		if (count==0) {
 			resultInfo.setCode("-1");

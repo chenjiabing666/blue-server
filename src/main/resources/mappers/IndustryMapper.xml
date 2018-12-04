@@ -116,4 +116,15 @@
   	select count(*) from t_industry
   </select>
   
+  
+  <!-- 
+  	List<Industry> selectIndustryListByName(String industryName);
+   -->
+  <select id="selectIndustryListByName" resultMap="BaseResultMap">
+  	select industry_id,name from t_industry where name like "%"#{industryName}"%"
+  </select>
+  
+  
+  
+  
 </mapper>

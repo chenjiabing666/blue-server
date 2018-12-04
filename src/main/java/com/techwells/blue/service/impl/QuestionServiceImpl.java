@@ -1,6 +1,9 @@
 package com.techwells.blue.service.impl;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
 import java.security.interfaces.RSAKey;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,12 +15,21 @@ import com.techwells.blue.annotation.PrintLog;
 import com.techwells.blue.dao.AnswerMapper;
 import com.techwells.blue.dao.ModuleMapper;
 import com.techwells.blue.dao.QuestionMapper;
+import com.techwells.blue.dao.ReportMapper;
+import com.techwells.blue.dao.ScoreMapper;
+import com.techwells.blue.dao.WarmMapper;
 import com.techwells.blue.domain.Answer;
 import com.techwells.blue.domain.Module;
 import com.techwells.blue.domain.Question;
+import com.techwells.blue.domain.Record;
+import com.techwells.blue.domain.Report;
+import com.techwells.blue.domain.Score;
+import com.techwells.blue.domain.Warm;
 import com.techwells.blue.domain.rs.QuestionAnswerVos;
 import com.techwells.blue.domain.rs.QuestionModuleVos;
+import com.techwells.blue.domain.rs.SubmitVos;
 import com.techwells.blue.service.QuestionService;
+import com.techwells.blue.util.DoubleUtils;
 import com.techwells.blue.util.PagingTool;
 import com.techwells.blue.util.ResultInfo;
 
@@ -34,6 +46,14 @@ public class QuestionServiceImpl implements QuestionService{
 	private AnswerMapper answerMapper;
 	@Resource
 	private ModuleMapper moduleMapper;
+	@Resource
+	private WarmMapper warmMapper;
+	@Resource
+	private ReportMapper reportMapper;
+	@Resource
+	private ScoreMapper scoreMapper;
+	
+	
 	
 	
 	
@@ -209,11 +229,136 @@ public class QuestionServiceImpl implements QuestionService{
 	
 	/**
 	 * 提交答案，需要核对分数，生成报告单
+	 * 1、总分
+	 * 2、单个模块的分数
+	 * 3、保存用户的答案
 	 */
-	
 	@Override
-	public Object submit(List<QuestionAnswerVos> answers) throws Exception {
+	public Object submit(SubmitVos answers) throws Exception {
 		ResultInfo resultInfo=new ResultInfo();
+		List<QuestionAnswerVos> questionAnswerVos=answers.getQuestionAnswerVos();  //获取提交的问题和答案
+		
+		int num=questionAnswerVos.size();  //题目的总数
+		String reportNum=System.currentTimeMillis()+"";  //报告单的单号
+		Report report=new Report();
+		report.setReportNum(reportNum);
+		report.setUserId(answers.getUserId());
+		report.setCreatedDate(new Date());
+		report.setOrganization("蓝色按钮");
+		report.setStatus(answers.getStatus());
+		//根据用户Id获取热身问题的答案
+		Warm warm=warmMapper.selectByUserId(answers.getUserId());
+		if (warm!=null) {
+			report.setCompany(warm.getCompany());
+			report.setStage(warm.getStage());
+		}
+		Double total_score=0.0;  //总分
+		//如果是单个模块测试
+		if (answers.getStatus().equals(0)) { 
+			Score score=new Score();  //存储每个模块的分数
+			int flag=0;
+			// 遍历数据
+			for (QuestionAnswerVos qa : questionAnswerVos) {
+				Double avg_score = DoubleUtils.round(100.0 / num, 2); // 每道题目的分数
+				// 获取指定答案的详细信息
+				Answer answer = answerMapper.selectByPrimaryKey(qa
+						.getAnswerId());
+				if (answer != null) {
+					// 获取权重
+					if (answer.getScroeLevel().equals(1)) {// 权重0%
+						total_score += 0;
+					} else if (answer.getScroeLevel().equals(2)) { // 25%
+						total_score += avg_score * 0.25;
+					} else if (answer.getScroeLevel().equals(3)) { // 50%
+						total_score += avg_score * 0.5;
+					} else if (answer.getScroeLevel().equals(4)) { // 75%
+						total_score += avg_score * 0.75;
+					} else if (answer.getScroeLevel().equals(5)) { // 100%
+						total_score += avg_score;
+					}
+				}
+				
+				if (flag==0) {  //获取模块的名称和模块的Id
+					//获取模块信息
+					Question question=questionMapper.selectByPrimaryKey(qa.getQuestionId());
+					if (question!=null) {
+						//获取模块名称
+						Module module=moduleMapper.selectByPrimaryKey(question.getModuleId());
+						if (module!=null) {
+							report.setReportName(module.getModuleName()+"模块测试");
+							score.setModuleId(module.getModuleId());
+						}
+					}
+					flag++;
+				}
+				
+			}
+			report.setTotalScore(DoubleUtils.round(total_score, 1)); // 设置总分
+			score.setScore(DoubleUtils.round(total_score, 1));   //设置单个模块的分数
+			
+			//添加报告
+			int count1=reportMapper.insertSelective(report);  //添加报告
+			
+			if (count1==0) {
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("答案提交失败");
+				return resultInfo;
+			}
+			
+			score.setReportId(report.getReportId());
+			
+			//插入记录
+			int count2=scoreMapper.insertSelective(score);
+			if (count2==0) {
+				throw new RuntimeException(); 
+			}
+			
+		}else {  //如果是整体测评，需要算出总分和每个模块的总分
+			int flag=0;
+			// 遍历数据
+			for (QuestionAnswerVos qa : questionAnswerVos) {
+				Double avg_score = DoubleUtils.round(100.0 / num, 2); // 每道题目的分数
+				// 获取指定答案的详细信息
+				Answer answer = answerMapper.selectByPrimaryKey(qa
+						.getAnswerId());
+				if (answer != null) {
+					// 获取权重
+					if (answer.getScroeLevel().equals(1)) {// 权重0%
+						total_score += 0;
+					} else if (answer.getScroeLevel().equals(2)) { // 25%
+						total_score += avg_score * 0.25;
+					} else if (answer.getScroeLevel().equals(3)) { // 50%
+						total_score += avg_score * 0.5;
+					} else if (answer.getScroeLevel().equals(4)) { // 75%
+						total_score += avg_score * 0.75;
+					} else if (answer.getScroeLevel().equals(5)) { // 100%
+						total_score += avg_score;
+					}
+				}
+				
+				if (flag==0) {  //获取模块的名称和模块的Id
+					//获取模块信息
+					Question question=questionMapper.selectByPrimaryKey(qa.getQuestionId());
+					if (question!=null) {
+						//获取模块名称
+						Module module=moduleMapper.selectByPrimaryKey(question.getModuleId());
+						if (module!=null) {
+							report.setReportName(module.getModuleName()+"模块测试");
+						}
+					}
+					flag++;
+				}
+				
+			}
+		}
+		
+		
+		//最后添加做题记录
+		
+		
+		
+		
+		
 		return answers;
 	}
 

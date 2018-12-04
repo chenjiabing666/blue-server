@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.techwells.blue.domain.Answer;
 import com.techwells.blue.domain.Question;
 import com.techwells.blue.domain.rs.QuestionAnswerVos;
+import com.techwells.blue.domain.rs.SubmitVos;
 import com.techwells.blue.util.PagingTool;
 
 /**
@@ -98,7 +99,7 @@ public interface QuestionService {
 	 * @return
 	 * @throws Exception
 	 */
-	Object submit(List<QuestionAnswerVos> answers)throws Exception;
+	Object submit(SubmitVos answers)throws Exception;
 	
 	
 	

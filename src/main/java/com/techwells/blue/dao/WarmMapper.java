@@ -14,4 +14,6 @@ public interface WarmMapper {
     int updateByPrimaryKeySelective(Warm record);
 
     int updateByPrimaryKey(Warm record);
+    
+	Warm selectByUserId(Integer userId);
 }

@@ -13,7 +13,7 @@ public class Warm {
 	@ApiModelProperty(value = "公司名称")
 	private String company;
 	@ApiModelProperty(value = "行业")
-	private String industry;
+    private Integer industryId;
 	@ApiModelProperty(value = "企业的阶段 1 引入期 2 发展期 3 成熟期 4 衰退期")
 	private Integer stage;
 
@@ -48,13 +48,13 @@ public class Warm {
 	public void setCompany(String company) {
 		this.company = company == null ? null : company.trim();
 	}
-
-	public String getIndustry() {
-		return industry;
+	
+	public Integer getIndustryId() {
+		return industryId;
 	}
 
-	public void setIndustry(String industry) {
-		this.industry = industry == null ? null : industry.trim();
+	public void setIndustryId(Integer industryId) {
+		this.industryId = industryId;
 	}
 
 	public Integer getStage() {
