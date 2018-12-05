@@ -6,7 +6,7 @@ public class Record {
     private Integer recordId;
 
     private Integer userId;
-
+    private Integer questionId;
     private Integer reportId;
 
     private Integer answerId;
@@ -47,7 +47,15 @@ public class Record {
         return answerId;
     }
 
-    public void setAnswerId(Integer answerId) {
+    public Integer getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(Integer questionId) {
+		this.questionId = questionId;
+	}
+
+	public void setAnswerId(Integer answerId) {
         this.answerId = answerId;
     }
 

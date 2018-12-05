@@ -587,7 +587,6 @@ public class QuestionController {
 		
 		String moduleId=request.getParameter("moduleId");  //模块Id 选择单个模块的时候传值  可选
 		
-		
 		//校验数据
 		if (StringUtils.isEmpty(pageNum)) {
 			resultInfo.setCode("-1");

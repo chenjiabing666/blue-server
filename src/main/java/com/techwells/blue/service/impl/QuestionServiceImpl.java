@@ -4,8 +4,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.security.interfaces.RSAKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -15,6 +19,7 @@ import com.techwells.blue.annotation.PrintLog;
 import com.techwells.blue.dao.AnswerMapper;
 import com.techwells.blue.dao.ModuleMapper;
 import com.techwells.blue.dao.QuestionMapper;
+import com.techwells.blue.dao.RecordMapper;
 import com.techwells.blue.dao.ReportMapper;
 import com.techwells.blue.dao.ScoreMapper;
 import com.techwells.blue.dao.WarmMapper;
@@ -52,6 +57,8 @@ public class QuestionServiceImpl implements QuestionService{
 	private ReportMapper reportMapper;
 	@Resource
 	private ScoreMapper scoreMapper;
+	@Resource
+	private RecordMapper recordMapper;
 	
 	
 	
@@ -248,18 +255,22 @@ public class QuestionServiceImpl implements QuestionService{
 		report.setStatus(answers.getStatus());
 		//根据用户Id获取热身问题的答案
 		Warm warm=warmMapper.selectByUserId(answers.getUserId());
-		if (warm!=null) {
-			report.setCompany(warm.getCompany());
-			report.setStage(warm.getStage());
+		if (warm==null) {
+			resultInfo.setCode("-1");
+			resultInfo.setMessage("请先完成热身问题");
+			return resultInfo;
 		}
-		Double total_score=0.0;  //总分
+		report.setCompany(warm.getCompany());
+		report.setStage(warm.getStage());
+		
+		Double total_score=0.0;  //总分（整体的总分，不是模块的总分）
 		//如果是单个模块测试
 		if (answers.getStatus().equals(0)) { 
 			Score score=new Score();  //存储每个模块的分数
 			int flag=0;
+			Double avg_score = DoubleUtils.round(100.0 / num, 2); // 每道题目的分数
 			// 遍历数据
 			for (QuestionAnswerVos qa : questionAnswerVos) {
-				Double avg_score = DoubleUtils.round(100.0 / num, 2); // 每道题目的分数
 				// 获取指定答案的详细信息
 				Answer answer = answerMapper.selectByPrimaryKey(qa
 						.getAnswerId());
@@ -291,10 +302,10 @@ public class QuestionServiceImpl implements QuestionService{
 					}
 					flag++;
 				}
-				
 			}
 			report.setTotalScore(DoubleUtils.round(total_score, 1)); // 设置总分
 			score.setScore(DoubleUtils.round(total_score, 1));   //设置单个模块的分数
+			score.setTotalScore(100.0);  //此时的单个模块的总分就是100
 			
 			//添加报告
 			int count1=reportMapper.insertSelective(report);  //添加报告
@@ -314,52 +325,90 @@ public class QuestionServiceImpl implements QuestionService{
 			}
 			
 		}else {  //如果是整体测评，需要算出总分和每个模块的总分
-			int flag=0;
+			Double avg_score = DoubleUtils.round(100.0 / num, 2); // 每道题目的分数
+			Map<Integer,Double> map=new HashMap<Integer, Double>();  //存储模块的得分 key是moduleId，value是得分
+			Map<Integer, Double> map2=new HashMap<Integer, Double>(); //存储这个模块的总分，就是这个模块所占的分数，key是moduleId，value是所占的总分
 			// 遍历数据
 			for (QuestionAnswerVos qa : questionAnswerVos) {
-				Double avg_score = DoubleUtils.round(100.0 / num, 2); // 每道题目的分数
+				Integer moduleId=null;
+				Question question=questionMapper.selectByPrimaryKey(qa.getQuestionId());
+				if (question!=null) {
+					//获取模块名称
+					Module module=moduleMapper.selectByPrimaryKey(question.getModuleId());
+					if (module!=null) {
+//						report.setReportName(module.getModuleName()+"模块测试");
+						moduleId=module.getModuleId();  //获取模块的Id
+					}
+				}
+				
+				map2.put(moduleId, map2.get(moduleId)!=null?map2.get(moduleId)+avg_score:0);  //计算单个模块的总分
+				
 				// 获取指定答案的详细信息
 				Answer answer = answerMapper.selectByPrimaryKey(qa
 						.getAnswerId());
 				if (answer != null) {
 					// 获取权重
 					if (answer.getScroeLevel().equals(1)) {// 权重0%
-						total_score += 0;
-					} else if (answer.getScroeLevel().equals(2)) { // 25%
+						total_score += 0;  //总分
+						map.put(moduleId, map.get(moduleId)!=null?map.get(moduleId)+0:0);  //模块的分数相加
+					} else if (answer.getScroeLevel().equals(2)) { // 25% 
 						total_score += avg_score * 0.25;
+						map.put(moduleId, map.get(moduleId)!=null?map.get(moduleId)+avg_score * 0.25:avg_score * 0.25);
 					} else if (answer.getScroeLevel().equals(3)) { // 50%
 						total_score += avg_score * 0.5;
+						map.put(moduleId, map.get(moduleId)!=null?map.get(moduleId)+avg_score * 0.5:avg_score * 0.5);
 					} else if (answer.getScroeLevel().equals(4)) { // 75%
 						total_score += avg_score * 0.75;
+						map.put(moduleId, map.get(moduleId)!=null?map.get(moduleId)+avg_score * 0.75:avg_score * 0.75);
 					} else if (answer.getScroeLevel().equals(5)) { // 100%
 						total_score += avg_score;
+						map.put(moduleId, map.get(moduleId)!=null?map.get(moduleId)+avg_score * 1:avg_score * 1);
 					}
 				}
-				
-				if (flag==0) {  //获取模块的名称和模块的Id
-					//获取模块信息
-					Question question=questionMapper.selectByPrimaryKey(qa.getQuestionId());
-					if (question!=null) {
-						//获取模块名称
-						Module module=moduleMapper.selectByPrimaryKey(question.getModuleId());
-						if (module!=null) {
-							report.setReportName(module.getModuleName()+"模块测试");
-						}
-					}
-					flag++;
+			}
+			
+			report.setReportName("整体模块测试");  //报告的名字
+			report.setTotalScore(DoubleUtils.round(total_score, 1)); // 设置总分
+			
+			//添加报告
+			int count1=reportMapper.insertSelective(report);  //添加报告
+			
+			if (count1==0) {
+				resultInfo.setCode("-1");
+				resultInfo.setMessage("答案提交失败");
+				return resultInfo;
+			}
+			
+			//遍历单个模块的分数，添加数据
+			for (Integer key : map.keySet()) {
+				Score score=new Score(); //设置单个模块的分数
+				score.setModuleId(key);
+				score.setCreatedDate(new Date());
+				score.setReportId(report.getReportId());
+				score.setScore(map.get(key));  //设置这个模块的得分
+				score.setTotalScore(map2.get(key));  //总分
+				int count2=scoreMapper.insertSelective(score);
+				if (count2==0) {
+					throw new RuntimeException();    //如果有一个插入失败了，那么必须回滚数据
 				}
-				
 			}
 		}
 		
-		
 		//最后添加做题记录
-		
-		
-		
-		
-		
-		return answers;
+		for (QuestionAnswerVos qa : questionAnswerVos) {
+			Record record=new Record();  //做题的记录
+			record.setAnswerId(qa.getAnswerId());
+			record.setRecordId(report.getReportId());
+			record.setUserId(answers.getUserId());
+			record.setQuestionId(qa.getQuestionId());
+			record.setCreatedDate(new Date());
+			int count3=recordMapper.insertSelective(record);
+			if (count3==0) {
+				throw new RuntimeException();  //直接回滚数据
+			}
+		}
+		resultInfo.setMessage("答案提交成功");
+		return resultInfo;
 	}
 
 	

@@ -2,6 +2,8 @@ package com.techwells.blue.test;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -12,7 +14,8 @@ public class TestEamil {
 	
 	@Test
 	public void test1() throws Exception{
-		System.out.println(DoubleUtils.round(100.0/3, 4));
+		Map<Integer,Double> map=new HashMap<Integer, Double>();
+		System.out.println(map.get(1));
 	}
 	
 	public static String formatDouble4(double d) {
