@@ -1,7 +1,5 @@
 package com.techwells.blue.service.impl;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.security.interfaces.RSAKey;
 import java.util.Date;
 import java.util.HashMap;
@@ -336,7 +334,6 @@ public class QuestionServiceImpl implements QuestionService{
 					//获取模块名称
 					Module module=moduleMapper.selectByPrimaryKey(question.getModuleId());
 					if (module!=null) {
-//						report.setReportName(module.getModuleName()+"模块测试");
 						moduleId=module.getModuleId();  //获取模块的Id
 					}
 				}
@@ -394,7 +391,7 @@ public class QuestionServiceImpl implements QuestionService{
 			}
 		}
 		
-		//最后添加做题记录
+		//最后添加做题记录,记录当前用户做题的记录
 		for (QuestionAnswerVos qa : questionAnswerVos) {
 			Record record=new Record();  //做题的记录
 			record.setAnswerId(qa.getAnswerId());

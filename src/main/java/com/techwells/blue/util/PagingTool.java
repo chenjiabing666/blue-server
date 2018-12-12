@@ -11,12 +11,6 @@ public class PagingTool {
 	private int pageSize = 10;   //默认的每页显示的条数为10条
 	private Map<String, Object> params = new HashMap<String, Object>();   //封装过滤条件
 	
-	//默认的构造方法
-	private PagingTool() {
-
-	}
-	
-	
 	/**
 	 * @param pageNum 当前页数  
 	 * @param pageSize   每页显示多少条

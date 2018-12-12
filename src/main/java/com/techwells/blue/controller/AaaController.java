@@ -45,7 +45,7 @@ public class AaaController {
 	@PostMapping("/aaa/addAaa")
 	@ApiOperation(value="添加模板",response=ResultInfo.class,hidden=true)
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "aaaName", dataType="String", required = true, value = "模板的aaaName", defaultValue = "Tom"),
+		@ApiImplicitParam(paramType = "query", name = "aaaName", dataType="String", required = true, value = "模板的aaaName", defaultValue = ""),
 	})
 	public Object addAaa(HttpServletRequest request){
 		ResultInfo resultInfo=new ResultInfo();

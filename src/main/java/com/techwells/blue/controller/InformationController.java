@@ -303,7 +303,7 @@ public class InformationController {
 		if (payType.contains(String.valueOf(4))) {
 			if (StringUtils.isEmpty(price)&&StringUtils.isEmpty(point)) {
 				resultInfo.setCode("-1");
-				resultInfo.setMessage("请选择付费的形式");
+				resultInfo.setMessage("请填写价格或者积分");
 				return resultInfo;
 			}
 		}

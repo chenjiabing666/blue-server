@@ -1,5 +1,4 @@
 package com.techwells.blue.controller;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

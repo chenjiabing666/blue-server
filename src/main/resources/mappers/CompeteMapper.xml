@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.techwells.blue.dao.CompeteMapper" >
+  <resultMap id="BaseResultMap" type="com.techwells.blue.domain.Compete" >
+    <id column="compete_id" property="competeId" jdbcType="INTEGER" />
+    <result column="industry_id" property="industryId" jdbcType="INTEGER" />
+    <result column="quality" property="quality" jdbcType="DOUBLE" />
+    <result column="deliver" property="deliver" jdbcType="DOUBLE" />
+    <result column="cost" property="cost" jdbcType="DOUBLE" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="compete" property="compete" jdbcType="DOUBLE" />
+    <result column="activated" property="activated" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    compete_id, industry_id, quality, deliver, cost, score, compete, activated, deleted, 
+    created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_compete
+    where compete_id = #{competeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_compete
+    where compete_id = #{competeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.techwells.blue.domain.Compete" >
+    <selectKey resultType="java.lang.Integer" keyProperty="competeId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_compete (industry_id, quality, deliver, 
+      cost, score, compete, 
+      activated, deleted, created_date, 
+      updated_date)
+    values (#{industryId,jdbcType=INTEGER}, #{quality,jdbcType=DOUBLE}, #{deliver,jdbcType=DOUBLE}, 
+      #{cost,jdbcType=DOUBLE}, #{score,jdbcType=DOUBLE}, #{compete,jdbcType=DOUBLE}, 
+      #{activated,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{updatedDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.techwells.blue.domain.Compete" >
+    <selectKey resultType="java.lang.Integer" keyProperty="competeId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_compete
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="industryId != null" >
+        industry_id,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="deliver != null" >
+        deliver,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="compete != null" >
+        compete,
+      </if>
+      <if test="activated != null" >
+        activated,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="industryId != null" >
+        #{industryId,jdbcType=INTEGER},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=DOUBLE},
+      </if>
+      <if test="deliver != null" >
+        #{deliver,jdbcType=DOUBLE},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="compete != null" >
+        #{compete,jdbcType=DOUBLE},
+      </if>
+      <if test="activated != null" >
+        #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.techwells.blue.domain.Compete" >
+    update t_compete
+    <set >
+      <if test="industryId != null" >
+        industry_id = #{industryId,jdbcType=INTEGER},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=DOUBLE},
+      </if>
+      <if test="deliver != null" >
+        deliver = #{deliver,jdbcType=DOUBLE},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="compete != null" >
+        compete = #{compete,jdbcType=DOUBLE},
+      </if>
+      <if test="activated != null" >
+        activated = #{activated,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where compete_id = #{competeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.techwells.blue.domain.Compete" >
+    update t_compete
+    set industry_id = #{industryId,jdbcType=INTEGER},
+      quality = #{quality,jdbcType=DOUBLE},
+      deliver = #{deliver,jdbcType=DOUBLE},
+      cost = #{cost,jdbcType=DOUBLE},
+      score = #{score,jdbcType=DOUBLE},
+      compete = #{compete,jdbcType=DOUBLE},
+      activated = #{activated,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where compete_id = #{competeId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 
+  	List<Compete> selectCompeteList(PagingTool pagingTool);
+   -->
+  <select id="selectCompeteList" resultMap="BaseResultMap" parameterType="com.techwells.blue.util.PagingTool">
+		  		SELECT
+			*
+		FROM
+			t_compete
+		<where>
+			<if test="params.industryId!=null">
+				and industry_id =#{params.industryId}
+			</if>
+		</where>
+	limit #{startNum},#{pageSize}
+  </select>
+  
+  
+<!-- 
+	int countTotalCompeteList(PagingTool pagingTool);
+ -->
+ <select id="countTotalCompeteList" resultType="java.lang.Integer" parameterType="com.techwells.blue.util.PagingTool">
+		  		SELECT
+			count(*)
+		FROM
+			t_compete
+		<where>
+			<if test="params.industryId!=null">
+				and industry_id =#{params.industryId}
+			</if>
+		</where>
+  </select>
+  
+  
+</mapper>

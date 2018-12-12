@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
  */
 public class DoubleUtils {
 	/**
-	 * 对double类型的数据四舍五入
+	 * 	对double类型的数据四舍五入
 	 * @param num  需要保留的小数位数
 	 * @param d
 	 * @return

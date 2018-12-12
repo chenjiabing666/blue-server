@@ -2,6 +2,7 @@ package com.techwells.blue.domain;
 
 import java.util.Date;
 
+
 public class Admin {
     private Integer adminId;
 

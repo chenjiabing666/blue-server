@@ -28,8 +28,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-import org.junit.Test;
-
 /**
  * 发送邮件的工具类
  * 
